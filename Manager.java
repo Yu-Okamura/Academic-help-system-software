@@ -45,18 +45,26 @@ public class Manager {
     	String use = " use CSE360;";
     	String table1 = "create table invitecode_table(invitecode varchar(100) primary key, role int) ;";
     	String table2 = "create table userinfo(ID int primary key, Username varchar(25) unique key, Password varchar(25), Name varchar(25), Email varchar(50), role_id int);";
-    	
-    	try(Connection connection = this.connection; Statement statement = connection.createStatement()){
-    		//statement.executeUpdate(database);
-    		//System.out.println("Database Created");
-    		//statement.executeUpdate(use);
-    		//System.out.println("Using CSE360");
-    		statement.executeUpdate(table1);
-    		System.out.println("inviteCode table Created");
-    		statement.executeUpdate(table2);
-    		System.out.println("userinfo table Created");
-    		
-    	}
+		String[] inviteCodes = {"CODE001", "CODE002", "CODE003", "CODE004", "CODE005", "CODE007", "CODE008", "CODE009", "CODE010"};
+	    	try(Connection connection = this.connection; Statement statement = connection.createStatement()){
+	    		//statement.executeUpdate(database);
+	    		//System.out.println("Database Created");
+	    		//statement.executeUpdate(use);
+	    		//System.out.println("Using CSE360");
+	    		statement.executeUpdate(table1);
+	    		System.out.println("inviteCode table Created");
+	    		statement.executeUpdate(table2);
+	    		System.out.println("userinfo table Created");
+	
+			String insertCODE1 = String.format("Insert into invitecode_table (invite code, role) VALUES ('%s','%d');", inviteCodes[0], 1);
+			//System.out.println("Invitecode inserted");
+			for (int i=1; i<inviteCodes.length; i++) {
+				int role = (i%2) +2;
+				String insertCODE = String.format("Insert into invitecode_table (invite code, role) VALUES ('%s','%d');", inviteCodes[i], role);
+				//System.out.println("Invitecode inserted");
+			}
+					
+		}
     	catch(SQLException e) {
 			System.out.println("SQL Error: " + e.getMessage());
 			e.printStackTrace();
@@ -159,5 +167,33 @@ public class Manager {
 		return ID;
 	}
 	
+	public static int validateInviteCode(String invite_code) {
+        String query = "SELECT role FROM invitecode_table WHERE invitecode = ?";
+
+        try(PreparedStatement statement = connection.prepareStatement(query)){
+
+            statement.setString(1, invite_code);
+
+            try(ResultSet result = statement.executeQuery()){
+                if(result.next()) {
+                    //invite code is valid
+                    int role = result.getInt("role");
+
+                    return role;
+                }
+                else {
+                    //invite code is invalid
+                    return -1;
+                }
+            }
+        }
+        catch(SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+
+        return 1;
+    }
 	
 }
