@@ -44,7 +44,7 @@ public class Manager {
     	String database =  "create database CSE360;";
     	String use = " use CSE360;";
     	String table1 = "create table invitecode_table(invitecode varchar(100) primary key) ;";
-    	String table2 = "create table userinfo(ID int(50) primary key, Username varchar(25) unique key, Password varchar(25), Name varchar(25), Email varchar(50), role_id int(50));";
+    	String table2 = "create table userinfo(ID int primary key, Username varchar(25) unique key, Password varchar(25), Name varchar(25), Email varchar(50), role_id int);";
     	
     	try(Connection connection = this.connection; Statement statement = connection.createStatement()){
     		//statement.executeUpdate(database);
