@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Scene6Controller">
+   <right>
+      <AnchorPane prefHeight="360.0" prefWidth="277.0" BorderPane.alignment="CENTER">
+         <children>
+            <TextField fx:id="emailField" layoutX="65.0" layoutY="148.0" promptText="Email" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 1px 1px 1px 1px;" />
+            <Text layoutX="53.0" layoutY="111.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter your email and we'll send you a one-time password." wrappingWidth="175.0" />
+            <Button fx:id="requestPassButton" layoutX="64.0" layoutY="187.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="149.0" style="-fx-background-color: #0598ff;" text="Request one-time pass" textFill="WHITE" onAction="#handleRequestPass" disable="true" />
+            <Text layoutX="101.0" layoutY="365.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Back to" />
+            <Hyperlink fx:id="loginLink" layoutX="139.0" layoutY="349.0" onAction="#handleLoginLink" style="-fx-background-color: transparent;" text="Log in" />
+            <Text fill="#0598ff" layoutX="63.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Trouble logging in?">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+         </children>
+      </AnchorPane>
+   </right>
+   <center>
+      <AnchorPane prefHeight="360.0" prefWidth="316.0" style="-fx-background-color: #0596ff;" BorderPane.alignment="CENTER" />
+   </center>
+</BorderPane>
