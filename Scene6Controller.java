@@ -34,8 +34,18 @@ public class Scene6Controller {
 
     @FXML
     private void handleRequestPass(ActionEvent event) {
-        // Logic for handling the request of a one-time password can be added here
-        System.out.println("Requesting one-time password for: " + emailField.getText());
+        try {
+            // Load the FXML for Scene 7
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("scene7.fxml"));
+            Parent root = loader.load();
+
+            // Get the current stage (window) and set the new scene
+            Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            stage.setScene(new Scene(root, 600, 400));
+            stage.show();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     @FXML
