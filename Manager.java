@@ -17,14 +17,18 @@ public class Manager {
     
     private Connection connection = null;
     
-    
+    	
 	public Manager() {
     	this.url = url;
     	this.root_user = root_user;
     	this.root_password = root_password;
     	this.connection = connection;
     }
+	/*
+	 * Utility and information gathering functions
+	 */
 	
+	//connects to the databse. Run before accessing database information
 	public void connect() {
 		Connection connection = null;
 		
@@ -39,13 +43,13 @@ public class Manager {
 		
 		this.connection = connection;
 	}
-	
+	//database and tables create function
 	public void createDatabaseAndTables() {
-	    	String database =  "create database CSE360;";
-	    	String use = " use CSE360;";
-	    	String table1 = "create table invitecode_table(invitecode varchar(100) primary key, role int) ;";
-	    	String table2 = "create table userinfo(ID int primary key, Username varchar(25) unique key, Password varchar(25), Name varchar(25), Email varchar(50), role_id int);";
-		String[] inviteCodes = {"CODE001", "CODE002", "CODE003", "CODE004", "CODE005", "CODE007", "CODE008", "CODE009", "CODE010"};
+	    	String database =  "create database CSE360;";//creating a database
+	    	String use = " use CSE360;";//using the new database
+	    	String table1 = "create table invitecode_table(invitecode varchar(100) primary key, role int) ;";//creating the invitecode table
+	    	String table2 = "create table userinfo(ID int primary key, Username varchar(25) unique key, Password varchar(25), Name varchar(25), Email varchar(50), role_id int);";//creating the userinfo table
+		String[] inviteCodes = {"CODE001", "CODE002", "CODE003", "CODE004", "CODE005", "CODE007", "CODE008", "CODE009", "CODE010"};//defining the preexixting invite codes
 	    	try(Connection connection = this.connection; Statement statement = connection.createStatement()){
 	    		//statement.executeUpdate(database);
 	    		//System.out.println("Database Created");
@@ -78,7 +82,7 @@ public class Manager {
 			e.printStackTrace();
 		}
     }
-	
+	//loads user object into database
 	public void createUser(User user, String invite_code) {
 		int num_users = getUserCount();
 		String query = "INSERT INTO userinfo (username, password, name, email) VALUES(?, ?, ?, ?)";
@@ -108,7 +112,8 @@ public class Manager {
 			giveRole(userID, 1);
 		}
 	}
-	
+	//gives a user a specific role. 
+	//use getUserID to get the ID
 	public void giveRole(int userID, int role) {
 		String query = "INSERT INTO user_roles(user_id, role_id) VALUES(?, ?)";
 		
@@ -127,7 +132,7 @@ public class Manager {
 			System.out.println("SQL Error: " + e.getMessage());
 		}
 	}
-	
+	//returns the total number of active users
 	public int getUserCount() {
 		int user_count = 0;
 		String query = "SELECT COUNT(*) FROM userinfo";
@@ -146,7 +151,7 @@ public class Manager {
 		
 		return user_count;
 	}
-	
+	//returns the integer ID associated with a Username in the database
 	public int getUserID(User user) {
 		//if no user exists
 		int ID = -1;
@@ -174,7 +179,8 @@ public class Manager {
 		
 		return ID;
 	}
-	
+
+	//return the role if the invite code is valid else return -1 for invalid invite code
 	public static int validateInviteCode(String invite_code) {
         String query = "SELECT role FROM invitecode_table WHERE invitecode = ?";
 
