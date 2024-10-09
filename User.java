@@ -24,45 +24,18 @@ mysql> describe userinfo;
 | Name     | varchar(25) | YES  |     | NULL    |                |
 | Email    | varchar(50) | YES  |     | NULL    |                |
 | ID       | int         | NO   | PRI | NULL    | auto_increment |
+| roles    | int         | YES  |     | NULL    |
 +----------+-------------+------+-----+---------+----------------+
 
 
-mysql> DESCRIBE roles;
+mysql> describe invitecode_tables;
 +-----------+-------------+------+-----+---------+----------------+
 | Field     | Type        | Null | Key | Default | Extra          |
 +-----------+-------------+------+-----+---------+----------------+
-| role_id   | int         | NO   | PRI | NULL    | auto_increment |
-| role_name | varchar(50) | NO   |     | NULL    |                |
+| invitcode | varchar(50) | NO   | PRI | NULL    | 		  |
+| role      | int	  | YES  |     | NULL    |                |
 +-----------+-------------+------+-----+---------+----------------+
-2 rows in set (0.00 sec)
 
-mysql> SELECT * FROM roles;
-+---------+------------+
-| role_id | role_name  |
-+---------+------------+
-|       1 | admin      |
-|       2 | student    |
-|       3 | instructor |
-+---------+------------+
-3 rows in set (0.01 sec)
-
-
-mysql> describe user_roles;
-+---------+------+------+-----+---------+-------+
-| Field   | Type | Null | Key | Default | Extra |
-+---------+------+------+-----+---------+-------+
-| user_id | int  | NO   | PRI | NULL    |       |
-| role_id | int  | NO   | PRI | NULL    |       |
-+---------+------+------+-----+---------+-------+
-2 rows in set (0.00 sec)
-
-createUser() : creates a user in the database, makes them admin if they have ID = 1
-updateUser() : updates a user based on their ID to a new a user object
-giveRole() : assigns a role to a user ID
-
-connect() : connects to database
-getUserCount() : gives the number of active users.
-getUserID() : returns an ID based on a username
  */
 
 public class User {
