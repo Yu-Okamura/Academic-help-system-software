@@ -41,10 +41,10 @@ public class Manager {
 	}
 	
 	public void createDatabaseAndTables() {
-    	String database =  "create database CSE360;";
-    	String use = " use CSE360;";
-    	String table1 = "create table invitecode_table(invitecode varchar(100) primary key, role int) ;";
-    	String table2 = "create table userinfo(ID int primary key, Username varchar(25) unique key, Password varchar(25), Name varchar(25), Email varchar(50), role_id int);";
+	    	String database =  "create database CSE360;";
+	    	String use = " use CSE360;";
+	    	String table1 = "create table invitecode_table(invitecode varchar(100) primary key, role int) ;";
+	    	String table2 = "create table userinfo(ID int primary key, Username varchar(25) unique key, Password varchar(25), Name varchar(25), Email varchar(50), role_id int);";
 		String[] inviteCodes = {"CODE001", "CODE002", "CODE003", "CODE004", "CODE005", "CODE007", "CODE008", "CODE009", "CODE010"};
 	    	try(Connection connection = this.connection; Statement statement = connection.createStatement()){
 	    		//statement.executeUpdate(database);
@@ -55,11 +55,19 @@ public class Manager {
 	    		System.out.println("inviteCode table Created");
 	    		statement.executeUpdate(table2);
 	    		System.out.println("userinfo table Created");
+			/* roles:
+   			1-Admin
+			2-Student
+			3-Teacher
+			4-Admin and student
+			5-Admin and teacher
+			6-Student and teacher
+			7-Admin, student, and teacher*/
 	
 			String insertCODE1 = String.format("Insert into invitecode_table (invite code, role) VALUES ('%s','%d');", inviteCodes[0], 1);
 			//System.out.println("Invitecode inserted");
 			for (int i=1; i<inviteCodes.length; i++) {
-				int role = (i%2) +2;
+				int role = (i%6) +2;
 				String insertCODE = String.format("Insert into invitecode_table (invite code, role) VALUES ('%s','%d');", inviteCodes[i], role);
 				//System.out.println("Invitecode inserted");
 			}
