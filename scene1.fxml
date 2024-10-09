@@ -11,16 +11,16 @@
 
 <BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Scene1Controller">
    <right>
-      <AnchorPane prefHeight="360.0" prefWidth="277.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="360.0" prefWidth="277.0" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
          <children>
-            <TextField fx:id="usernameField" layoutX="65.0" layoutY="87.0" promptText="Username or email" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 1px 1px 1px 1px;" />
-            <PasswordField fx:id="passwordField" layoutX="65.0" layoutY="126.0" promptText="Password" style="-fx-background-color: transparent; -fx-border-color: #0598ff; -fx-border-width: 1px 1px 1px 1px;" />
-            <Button fx:id="loginButton" layoutX="66.0" layoutY="173.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="149.0" style="-fx-background-color: #0598ff;" text="Log in" textFill="WHITE" onAction="#handleLogin" disable="true" />
-            <Text layoutX="68.0" layoutY="263.0" strokeType="OUTSIDE" strokeWidth="0.0" text="――――     OR     ――――" />
-            <Hyperlink fx:id="forgotPasswordLink" layoutX="89.0" layoutY="208.0" style="-fx-background-color: transparent;" text="Forgot password?" onAction="#handleForgotPasswordLink" />
-            <Text layoutX="54.0" layoutY="303.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Dont't have an account?" />
-            <Hyperlink fx:id="signUpLink" layoutX="182.0" layoutY="287.0" style="-fx-background-color: transparent;" text="Sign up" onAction="#handleSignUpLink" />
-            <Text fill="#0598ff" layoutX="98.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="User Login">
+            <TextField fx:id="usernameField" layoutX="65.0" layoutY="87.0" promptText="Username or email" style="-fx-border-color: #00ffc9; -fx-border-width: 1px 1px 1px 1px; -fx-background-color: transaparent; -fx-text-fill: white;" />
+            <PasswordField fx:id="passwordField" layoutX="65.0" layoutY="126.0" promptText="Password" style="-fx-background-color: #000000; -fx-border-color: #00ffc9; -fx-border-width: 1px 1px 1px 1px; -fx-text-fill: white;" />
+            <Button fx:id="loginButton" disable="true" layoutX="66.0" layoutY="173.0" mnemonicParsing="false" onAction="#handleLogin" prefHeight="27.0" prefWidth="149.0" style="-fx-background-color: #00ffc9;" text="Log in" />
+            <Text fill="WHITE" layoutX="68.0" layoutY="263.0" strokeType="OUTSIDE" strokeWidth="0.0" text="――――     OR     ――――" />
+            <Hyperlink fx:id="forgotPasswordLink" layoutX="89.0" layoutY="208.0" onAction="#handleForgotPasswordLink" style="-fx-background-color: transparent;" text="Forgot password?" textFill="#00ffc9" />
+            <Text fill="WHITE" focusTraversable="true" layoutX="54.0" layoutY="303.0" strokeType="OUTSIDE" text="Dont't have an account?" />
+            <Hyperlink fx:id="signUpLink" layoutX="182.0" layoutY="287.0" onAction="#handleSignUpLink" style="-fx-background-color: transparent;" text="Sign up" textFill="#00ffc9" />
+            <Text fill="#00ffc9" layoutX="98.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="User Login">
                <font>
                   <Font size="18.0" />
                </font>
@@ -29,6 +29,6 @@
       </AnchorPane>
    </right>
    <center>
-      <AnchorPane prefHeight="360.0" prefWidth="316.0" style="-fx-background-color: #0596ff;" BorderPane.alignment="CENTER" />
+      <AnchorPane prefHeight="360.0" prefWidth="316.0" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>

@@ -9,6 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -33,6 +34,9 @@ public class Scene2Controller {
     private TextField usernameField;
 
     @FXML
+    private ChoiceBox<String> roleChoiceBox;
+
+    @FXML
     private Button signUpButton;
 
     @FXML
@@ -40,12 +44,25 @@ public class Scene2Controller {
 
     @FXML
     private Text passwordErrorText;
-    
+
     @FXML
     private Text usernameErrorText;
 
     @FXML
     public void initialize() {
+        // Populate the choice box with options
+        roleChoiceBox.getItems().addAll("Student", "Instructor");
+        roleChoiceBox.setValue("Select your role");
+
+        // Set the style for the placeholder text when it is "Select your role"
+        setChoiceBoxStyle();
+
+        // Add a listener to detect when the value changes
+        roleChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            setChoiceBoxStyle();
+            validateForm();
+        });
+
         // Add listeners to validate inputs
         emailField.textProperty().addListener((observable, oldValue, newValue) -> validateEmail());
         confirmEmailField.textProperty().addListener((observable, oldValue, newValue) -> validateEmail());
@@ -81,7 +98,7 @@ public class Scene2Controller {
         String confirmEmail = confirmEmailField.getText();
 
         if (!confirmEmail.isEmpty() && !confirmEmail.equals(email)) {
-            emailErrorText.setText("needs to match");
+            emailErrorText.setText("must match");
         } else {
             emailErrorText.setText("");
         }
@@ -107,7 +124,7 @@ public class Scene2Controller {
         }
         validateForm();
     }
-    
+
     private void validateUsername() {
         String username = usernameField.getText();
         if (username.isEmpty()) {
@@ -130,12 +147,25 @@ public class Scene2Controller {
         boolean isEmailValid = emailErrorText.getText().isEmpty();
         boolean isPasswordValid = passwordErrorText.getText().isEmpty();
         boolean isUsernameValid = usernameErrorText.getText().isEmpty();
+        boolean isRoleSelected = !roleChoiceBox.getValue().equals("Select your role");
         boolean isAllFieldsFilled = !inviteCodeField.getText().trim().isEmpty() &&
                                     !emailField.getText().trim().isEmpty() &&
                                     !confirmEmailField.getText().trim().isEmpty() &&
                                     !passwordField.getText().trim().isEmpty() &&
                                     !usernameField.getText().trim().isEmpty();
 
-        signUpButton.setDisable(!(isEmailValid && isPasswordValid && isUsernameValid && isAllFieldsFilled));
+        signUpButton.setDisable(!(isEmailValid && isPasswordValid && isUsernameValid && isRoleSelected && isAllFieldsFilled));
+    }
+
+    private void setChoiceBoxStyle() {
+        // Preserve existing style from FXML and add new styles conditionally
+        String baseStyle = "-fx-background-color: black; -fx-border-width: 1px 1px 1px 1px; -fx-border-color: #c00000;";
+        if ("Select your role".equals(roleChoiceBox.getValue())) {
+            // Apply additional styles for placeholder text
+            roleChoiceBox.setStyle(baseStyle + "-fx-border-color: #c00000;");
+        } else {
+            // Reset to the base style when a valid option is selected
+            roleChoiceBox.setStyle(baseStyle + "-fx-border-color: #c00000;");
+        }
     }
 }

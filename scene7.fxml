@@ -8,12 +8,12 @@
 
 <BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Scene7Controller">
    <right>
-      <AnchorPane prefHeight="360.0" prefWidth="277.0" BorderPane.alignment="CENTER">
+      <AnchorPane prefHeight="360.0" prefWidth="277.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
          <children>
-            <Text layoutX="52.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="An email has been to your email. Please check your mailbox to see your one-time password that can be used to login into your account." wrappingWidth="175.0" />
-            <Text layoutX="101.0" layoutY="365.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Back to" />
-            <Hyperlink fx:id="loginLink" layoutX="139.0" layoutY="349.0" onAction="#handleLoginLink" style="-fx-background-color: transparent;" text="Log in" />
-            <Text fill="#0598ff" layoutX="105.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Success!">
+            <Text fill="WHITE" layoutX="52.0" layoutY="103.0" strokeType="OUTSIDE" strokeWidth="0.0" text="An email has been sent \to your email. Please check your mailbox to see your one-time password that can be used to login into your account." wrappingWidth="175.0" />
+            <Text fill="WHITE" layoutX="101.0" layoutY="365.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Back to" />
+            <Hyperlink fx:id="loginLink" layoutX="139.0" layoutY="349.0" onAction="#handleLoginLink" style="-fx-background-color: transparent;" text="Log in" textFill="#00ffc9" />
+            <Text fill="#00ffc9" layoutX="105.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Success!">
                <font>
                   <Font size="18.0" />
                </font>
@@ -22,6 +22,6 @@
       </AnchorPane>
    </right>
    <center>
-      <AnchorPane prefHeight="360.0" prefWidth="316.0" style="-fx-background-color: #0596ff;" BorderPane.alignment="CENTER" />
+      <AnchorPane prefHeight="360.0" prefWidth="316.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER" />
    </center>
 </BorderPane>
