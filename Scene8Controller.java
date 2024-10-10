@@ -41,12 +41,20 @@ public class Scene8Controller {
     @FXML
     private void handleChangePassword(ActionEvent event) {
         try {
+        	Manager admin = new Manager();
+        	admin.connect();
+            
             // Load the FXML for Scene 1
             FXMLLoader loader = new FXMLLoader(getClass().getResource("scene1.fxml"));
             Parent root = loader.load();
 
             // Get the current stage (window) and set the new scene
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            
+            User thisUser = (User) stage.getUserData();
+            
+            admin.setPassword(thisUser, passwordField.getText());
+            
             stage.setScene(new Scene(root, 600, 400));
             stage.show();
         } catch (IOException e) {

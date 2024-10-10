@@ -30,5 +30,23 @@ public class Main extends Application {
 
     public static void main(String[] args) {
         launch(args);
+        
+        //Fresh db run ONLY
+//        Manager admin = new Manager();
+//		admin.connect();
+//		admin.createDatabaseAndTables();
+		
+		//User newUser = new User("mwolf", "Abc123!g", "Max Wolf", "mwolf2@cognify.com");
+		
+		//admin.createUser(newUser, "1234");
+		//System.out.println(admin.getUserCount());
+    	
+//    	Manager admin = new Manager();
+//    	admin.connect();
+//    	String[] userList = admin.listAllUsers();
+//    	for (int i = 0; i < 10; i++) {
+//    		System.out.println(userList[i]);
+//    	}
+    	
     }
 }

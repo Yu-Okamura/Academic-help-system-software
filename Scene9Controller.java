@@ -12,10 +12,24 @@ import java.io.IOException;
 public class Scene9Controller {
 
     @FXML
-    private void handleSignOut(ActionEvent event) {
+    private void handleLoginButton(ActionEvent event) {
+        switchScene(event, "scene1.fxml");
+    }
+
+    @FXML
+    private void handleForgotPasswordLink(ActionEvent event) {
+        switchScene(event, "scene6.fxml");
+    }
+
+    @FXML
+    private void handleSignUpLink(ActionEvent event) {
+        switchScene(event, "scene2.fxml");
+    }
+
+    private void switchScene(ActionEvent event, String fxmlFile) {
         try {
-            // Load the FXML for Scene 1
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("scene1.fxml"));
+            // Load the FXML for the new scene
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
 
             // Get the current stage (window) and set the new scene
