@@ -22,7 +22,7 @@ public class Scene13Controller {
     @FXML
     private Text inviteCodeText, otpText;
     @FXML
-    private TextField resetEmailField, editRoleEmailField, deleteEmailField, confirmDeleteField;
+    private TextField resetEmailField, editRoleEmailField, deleteEmailField, confirmDeleteField, unixTimeField;
 
     @FXML
     public void initialize() {
@@ -38,7 +38,8 @@ public class Scene13Controller {
 
         // Set listeners
         generateInviteChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> generateLink.setDisable(newVal == null));
-        resetEmailField.textProperty().addListener((obs, oldVal, newVal) -> resetLink.setDisable(newVal.trim().isEmpty()));
+        resetEmailField.textProperty().addListener((obs, oldVal, newVal) -> validateResetFields());
+        unixTimeField.textProperty().addListener((obs, oldVal, newVal) -> validateResetFields());
         editRoleChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> validateSetRole());
         editRoleEmailField.textProperty().addListener((obs, oldVal, newVal) -> validateSetRole());
         deleteEmailField.textProperty().addListener((obs, oldVal, newVal) -> deleteLink.setDisable(newVal.trim().isEmpty()));
@@ -51,17 +52,19 @@ public class Scene13Controller {
 
     @FXML
     private void handleGenerateInvite(ActionEvent event) {
-        inviteCodeText.setText("code: XYZ123"); //example
+        inviteCodeText.setText("code: XYZ123"); // example
     }
 
     @FXML
     private void handleResetPassword(ActionEvent event) {
-        otpText.setText("OTP: 123456"); //example
+        String unixTime = unixTimeField.getText().trim();
+        System.out.println("Unix Time: " + unixTime);
+        otpText.setText("OTP: 123456"); // example
     }
 
     @FXML
     private void handleSetRole(ActionEvent event) {
-        System.out.println("User role updated"); 
+        System.out.println("User role updated");
     }
 
     @FXML
@@ -77,6 +80,12 @@ public class Scene13Controller {
     @FXML
     private void handleSignOut(ActionEvent event) {
         switchScene(event, "scene1.fxml");
+    }
+
+    private void validateResetFields() {
+        boolean isEmailFilled = !resetEmailField.getText().trim().isEmpty();
+        boolean isUnixTimeFilled = !unixTimeField.getText().trim().isEmpty();
+        resetLink.setDisable(!(isEmailFilled && isUnixTimeFilled));
     }
 
     private void validateSetRole() {
