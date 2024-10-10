@@ -7,29 +7,33 @@ import javafx.scene.Parent;
 import javafx.fxml.FXMLLoader;
 
 public class Main extends Application {
+    // Static reference to the primary stage of the application
     private static Stage primaryStage;
 
+    // Override the start method, entry point for JavaFX applications
     @Override
     public void start(Stage stage) {
         primaryStage = stage;
         primaryStage.setTitle("Login and Sign Up System");
-        loadScene("scene1.fxml"); // Load Scene 1 initially
+        loadScene("scene1.fxml"); // Load the initial scene (Scene 1)
     }
 
+    // Method to load and display a scene based on the given FXML file
     public static void loadScene(String fxmlFile) {
         try {
-            FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxmlFile));
-            Parent root = loader.load();
-            Scene scene = new Scene(root, 600, 400);
-            primaryStage.setScene(scene);
-            primaryStage.show();
+            FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxmlFile)); // Load FXML file
+            Parent root = loader.load(); // Load the scene graph
+            Scene scene = new Scene(root, 600, 400); // Create a new scene with specified dimensions
+            primaryStage.setScene(scene); // Set the scene to the primary stage
+            primaryStage.show(); // Display the stage
         } catch (Exception e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Print stack trace in case of an error
         }
     }
 
+    // Main method, the application's entry point
     public static void main(String[] args) {
-        launch(args);
+        launch(args); // Launch the JavaFX application
         
         //Fresh db run ONLY
 //        Manager admin = new Manager();
