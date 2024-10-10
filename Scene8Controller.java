@@ -33,51 +33,53 @@ public class Scene8Controller {
 
     @FXML
     public void initialize() {
-        // Add listeners to validate inputs
+        // Add listeners to validate inputs in real-time as the user types
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> validatePassword());
         confirmPasswordField.textProperty().addListener((observable, oldValue, newValue) -> validateConfirmPassword());
     }
 
+    // Handles the action when the "Change Password" button is clicked
     @FXML
     private void handleChangePassword(ActionEvent event) {
         try {
-        	Manager admin = new Manager();
-        	admin.connect();
+            Manager admin = new Manager();
+            admin.connect(); // Connect to the database
             
-            // Load the FXML for Scene 1
+            // Load the FXML for Scene 1 (Login Screen)
             FXMLLoader loader = new FXMLLoader(getClass().getResource("scene1.fxml"));
             Parent root = loader.load();
 
-            // Get the current stage (window) and set the new scene
+            // Get the current stage (window) and retrieve the user data
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            User thisUser = (User) stage.getUserData(); // Get the user data from the stage
             
-            User thisUser = (User) stage.getUserData();
+            admin.setPassword(thisUser, passwordField.getText()); // Set the new password for the user
             
-            admin.setPassword(thisUser, passwordField.getText());
-            
-            stage.setScene(new Scene(root, 600, 400));
-            stage.show();
+            stage.setScene(new Scene(root, 600, 400)); // Set the scene with specified dimensions
+            stage.show(); // Show the updated stage
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Print stack trace if an exception occurs
         }
     }
 
+    // Handles the action of navigating to the login screen when the login link is clicked
     @FXML
     private void handleLoginLink(ActionEvent event) {
         try {
-            // Load the FXML for Scene 1
+            // Load the FXML for Scene 1 (Login Screen)
             FXMLLoader loader = new FXMLLoader(getClass().getResource("scene1.fxml"));
             Parent root = loader.load();
 
             // Get the current stage (window) and set the new scene
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 600, 400));
-            stage.show();
+            stage.setScene(new Scene(root, 600, 400)); // Set scene dimensions
+            stage.show(); // Show the updated stage
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Print stack trace if an exception occurs
         }
     }
 
+    // Validates the password field based on length and character requirements
     private void validatePassword() {
         String password = passwordField.getText();
         if (password.isEmpty()) {
@@ -95,9 +97,10 @@ public class Scene8Controller {
         } else {
             passwordErrorText.setText("");
         }
-        validateForm();
+        validateForm(); // Validate the entire form after updating the password
     }
 
+    // Validates the confirm password field to ensure it matches the password
     private void validateConfirmPassword() {
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
@@ -106,14 +109,16 @@ public class Scene8Controller {
         } else {
             confirmPasswordErrorText.setText("");
         }
-        validateForm();
+        validateForm(); // Validate the entire form after updating the confirm password field
     }
 
+    // Validates the form to enable or disable the "Change Password" button
     private void validateForm() {
         boolean isPasswordValid = passwordErrorText.getText().isEmpty();
         boolean isConfirmPasswordValid = confirmPasswordErrorText.getText().isEmpty();
         boolean isAllFieldsFilled = !passwordField.getText().trim().isEmpty() && !confirmPasswordField.getText().trim().isEmpty();
 
+        // Enable the button only if all fields are valid and filled
         changePasswordButton.setDisable(!(isPasswordValid && isConfirmPasswordValid && isAllFieldsFilled));
     }
 }
