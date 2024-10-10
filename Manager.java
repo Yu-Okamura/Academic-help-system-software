@@ -358,6 +358,8 @@ public class Manager {
 					String email = result.getString("Email");
 					if (email.equals("DEFAULT")) {
 						return 0;
+					} else if (user.password.substring(0, 3).equals("OTP")){
+						return 2;
 					} else {
 						return 1;
 					}
@@ -497,7 +499,36 @@ public class Manager {
 		
 	}
 	
+	public String getUserNameFromEmail(String email) {
+        //if no user exists
+        String username = "nothing";
+
+        String query = "SELECT username FROM userinfo WHERE Email = ?";
+
+        try(PreparedStatement statement = this.connection.prepareStatement(query)){
+
+            statement.setString(1, email);
+
+            try(ResultSet result = statement.executeQuery()){
+                if(result.next()) {
+                    username = result.getString("Username");
+                }
+                else {
+                    System.out.println("Error: User not found in database.");
+                }
+            }
+
+        }
+        catch(SQLException e) {
+            System.out.println("SQL Error: " + e.getMessage());
+            e.printStackTrace();
+        }
+
+        return username;
+    }
+	
 	public String getInviteCode(int index) {
 		return this.inviteCodes[index];
 	}
 }
+

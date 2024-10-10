@@ -22,7 +22,9 @@ public class Scene13Controller {
     @FXML
     private Text inviteCodeText, otpText;
     @FXML
-    private TextField resetEmailField, editRoleEmailField, deleteEmailField, confirmDeleteField;
+    private TextField resetEmailField, editRoleEmailField, deleteEmailField, confirmDeleteField, unixTimeField;
+
+    private Manager admin = new Manager();
 
     @FXML
     public void initialize() {
@@ -35,10 +37,13 @@ public class Scene13Controller {
         resetLink.setDisable(true);
         setRoleLink.setDisable(true);
         deleteLink.setDisable(true);
+        
+        admin.connect();
 
         // Set listeners
         generateInviteChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> generateLink.setDisable(newVal == null));
-        resetEmailField.textProperty().addListener((obs, oldVal, newVal) -> resetLink.setDisable(newVal.trim().isEmpty()));
+        resetEmailField.textProperty().addListener((obs, oldVal, newVal) -> validateResetFields());
+        unixTimeField.textProperty().addListener((obs, oldVal, newVal) -> validateResetFields());
         editRoleChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> validateSetRole());
         editRoleEmailField.textProperty().addListener((obs, oldVal, newVal) -> validateSetRole());
         deleteEmailField.textProperty().addListener((obs, oldVal, newVal) -> deleteLink.setDisable(newVal.trim().isEmpty()));
@@ -51,22 +56,34 @@ public class Scene13Controller {
 
     @FXML
     private void handleGenerateInvite(ActionEvent event) {
-        inviteCodeText.setText("code: XYZ123"); //example
+         //example
+        int selectedRoleId = generateInviteChoiceBox.getValue();
+        String inviteCode = this.admin.getInviteCode(selectedRoleId);
+        inviteCodeText.setText(inviteCode);
+        
     }
 
     @FXML
     private void handleResetPassword(ActionEvent event) {
-        otpText.setText("OTP: 123456"); //example
+    	String password = admin.generateOTP(unixTimeField.getText());
+    	User userToChange = new User(resetEmailField.getText(), "", "", "");
+    	admin.setPassword(userToChange, password);
+        otpText.setText(password); //example
     }
 
     @FXML
     private void handleSetRole(ActionEvent event) {
         System.out.println("User role updated"); 
+        User userToChange = new User(editRoleEmailField.getText(), "", "", "");
+        int idToChange = admin.getUserID(userToChange);
+        admin.changeRole(idToChange, editRoleChoiceBox.getValue());
     }
 
     @FXML
     private void handleDeleteUser(ActionEvent event) {
         confirmDeleteField.setVisible(true);
+        User userToChange = new User(deleteEmailField.getText(), "", "", "");
+        admin.deleteUserByID(userToChange);
     }
 
     @FXML
@@ -77,6 +94,12 @@ public class Scene13Controller {
     @FXML
     private void handleSignOut(ActionEvent event) {
         switchScene(event, "scene1.fxml");
+    }
+
+    private void validateResetFields() {
+        boolean isEmailFilled = !resetEmailField.getText().trim().isEmpty();
+        boolean isUnixTimeFilled = !unixTimeField.getText().trim().isEmpty();
+        resetLink.setDisable(!(isEmailFilled && isUnixTimeFilled));
     }
 
     private void validateSetRole() {

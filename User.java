@@ -45,8 +45,6 @@ public class User {
     static String root_user = "root";
     static String root_password = "Kingfish314!";
     
-    static Connection connection = null;
-    
     //creates a User object
     public User(String username, String password, String name, String email) {
     	this.username = username;

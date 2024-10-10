@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
@@ -10,13 +11,17 @@
    <right>
       <AnchorPane prefHeight="360.0" prefWidth="277.0" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
          <children>
-            <Hyperlink fx:id="signOutLink" layoutX="112.0" layoutY="307.0" style="-fx-background-color: transparent;" text="Sign out" textFill="#00ffc9" onAction="#handleSignOut" />
-            <Text fill="#00ffc9" layoutX="80.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome back!">
+            <Button fx:id="loginButton" layoutX="66.0" layoutY="173.0" mnemonicParsing="false" prefHeight="27.0" prefWidth="149.0" style="-fx-background-color: #00ffc9;" text="Back to Login" onAction="#handleLoginButton" />
+            <Text fill="WHITE" layoutX="68.0" layoutY="263.0" strokeType="OUTSIDE" strokeWidth="0.0" text="――――     OR     ――――" />
+            <Hyperlink fx:id="forgotPasswordLink" layoutX="89.0" layoutY="208.0" style="-fx-background-color: transparent;" text="Forgot password?" textFill="#00ffc9" onAction="#handleForgotPasswordLink" />
+            <Text fill="WHITE" focusTraversable="true" layoutX="54.0" layoutY="303.0" strokeType="OUTSIDE" text="Don't have an account?" />
+            <Hyperlink fx:id="signUpLink" layoutX="182.0" layoutY="287.0" style="-fx-background-color: transparent;" text="Sign up" textFill="#00ffc9" onAction="#handleSignUpLink" />
+            <Text fill="#00ffc9" layoutX="91.0" layoutY="57.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Login Failed">
                <font>
                   <Font size="18.0" />
                </font>
             </Text>
-            <Text fill="WHITE" layoutX="39.0" layoutY="104.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You are now logged in so go ahead and sign out! :)" wrappingWidth="200.0" />
+            <Text fill="WHITE" layoutX="41.0" layoutY="101.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Sorry, your email or password was incorrect. Please double-check your email and password." wrappingWidth="200.0" />
          </children>
       </AnchorPane>
    </right>

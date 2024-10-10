@@ -23,6 +23,8 @@ public class Scene6Controller {
 
     @FXML
     private Hyperlink loginLink;
+    
+    private Manager manager = new Manager();
 
     @FXML
     public void initialize() {
@@ -30,10 +32,22 @@ public class Scene6Controller {
         emailField.textProperty().addListener((observable, oldValue, newValue) -> {
             validateEmail(newValue);
         });
+        manager.connect();
     }
 
     @FXML
     private void handleRequestPass(ActionEvent event) {
+    	
+    	long unixTime = (System.currentTimeMillis() + 900000 / 1000L);
+        String unixString = Long.toString(unixTime);
+
+        String newPassword = manager.generateOTP(unixString);
+        String username = manager.getUserNameFromEmail(emailField.getText());
+
+        User requester = new User(username, "", "", "");
+
+        manager.setPassword(requester, newPassword);
+        
         try {
             // Load the FXML for Scene 7
             FXMLLoader loader = new FXMLLoader(getClass().getResource("scene7.fxml"));
