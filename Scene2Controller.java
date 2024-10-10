@@ -1,5 +1,7 @@
 package application;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -7,7 +9,7 @@ import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
@@ -20,32 +22,52 @@ public class Scene2Controller {
     private TextField inviteCodeField;
 
     @FXML
-    private TextField usernameField;
+    private TextField emailField;
+
+    @FXML
+    private TextField confirmEmailField;
 
     @FXML
     private TextField passwordField;
 
     @FXML
-    private TextField confirmPasswordField;
+    private TextField usernameField;
+
+    @FXML
+    private ChoiceBox<String> roleChoiceBox;
 
     @FXML
     private Button signUpButton;
 
     @FXML
-    private Text usernameErrorText;
+    private Text emailErrorText;
 
     @FXML
     private Text passwordErrorText;
 
     @FXML
-    private Text confirmPasswordErrorText;
+    private Text usernameErrorText;
 
     @FXML
     public void initialize() {
+        // Populate the choice box with options
+        roleChoiceBox.getItems().addAll("Student", "Instructor");
+        roleChoiceBox.setValue("Select your role");
+
+        // Set the style for the placeholder text when it is "Select your role"
+        setChoiceBoxStyle();
+
+        // Add a listener to detect when the value changes
+        roleChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            setChoiceBoxStyle();
+            validateForm();
+        });
+
         // Add listeners to validate inputs
-        usernameField.textProperty().addListener((observable, oldValue, newValue) -> validateUsername());
+        emailField.textProperty().addListener((observable, oldValue, newValue) -> validateEmail());
+        confirmEmailField.textProperty().addListener((observable, oldValue, newValue) -> validateEmail());
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> validatePassword());
-        confirmPasswordField.textProperty().addListener((observable, oldValue, newValue) -> validateConfirmPassword());
+        usernameField.textProperty().addListener((observable, oldValue, newValue) -> validateUsername());
         inviteCodeField.textProperty().addListener((observable, oldValue, newValue) -> validateForm());
     }
 
@@ -71,20 +93,14 @@ public class Scene2Controller {
         }
     }
 
-    private void validateUsername() {
-        String username = usernameField.getText();
-        if (username.isEmpty()) {
-            usernameErrorText.setText("");
-        } else if (!Character.isLetter(username.charAt(0))) {
-            usernameErrorText.setText("must start with an alphabet");
-        } else if (username.length() < 3) {
-            usernameErrorText.setText("must be at least 3 characters long");
-        } else if (username.length() > 15) {
-            usernameErrorText.setText("must be less than 16 characters long");
-        } else if (!username.matches("[A-Za-z0-9]+")) {
-            usernameErrorText.setText("alphabets and numbers only");
+    private void validateEmail() {
+        String email = emailField.getText();
+        String confirmEmail = confirmEmailField.getText();
+
+        if (!confirmEmail.isEmpty() && !confirmEmail.equals(email)) {
+            emailErrorText.setText("must match");
         } else {
-            usernameErrorText.setText("");
+            emailErrorText.setText("");
         }
         validateForm();
     }
@@ -109,28 +125,47 @@ public class Scene2Controller {
         validateForm();
     }
 
-    private void validateConfirmPassword() {
-        String password = passwordField.getText();
-        String confirmPassword = confirmPasswordField.getText();
-        if (confirmPassword.isEmpty()) {
-            confirmPasswordErrorText.setText("");
-        } else if (!confirmPassword.equals(password)) {
-            confirmPasswordErrorText.setText("must match");
+    private void validateUsername() {
+        String username = usernameField.getText();
+        if (username.isEmpty()) {
+            usernameErrorText.setText("");
+        } else if (!Character.isLetter(username.charAt(0))) {
+            usernameErrorText.setText("First character must be an alphabet");
+        } else if (username.length() < 3) {
+            usernameErrorText.setText("must be at least 3 characters long");
+        } else if (username.length() > 12) {
+            usernameErrorText.setText("must be less than 13 characters long");
+        } else if (!username.matches("[A-Za-z0-9]+")) {
+            usernameErrorText.setText("alphabets and numbers only");
         } else {
-            confirmPasswordErrorText.setText("");
+            usernameErrorText.setText("");
         }
         validateForm();
     }
 
     private void validateForm() {
-        boolean isUsernameValid = usernameErrorText.getText().isEmpty();
+        boolean isEmailValid = emailErrorText.getText().isEmpty();
         boolean isPasswordValid = passwordErrorText.getText().isEmpty();
-        boolean isConfirmPasswordValid = confirmPasswordErrorText.getText().isEmpty();
+        boolean isUsernameValid = usernameErrorText.getText().isEmpty();
+        boolean isRoleSelected = !roleChoiceBox.getValue().equals("Select your role");
         boolean isAllFieldsFilled = !inviteCodeField.getText().trim().isEmpty() &&
-                                    !usernameField.getText().trim().isEmpty() &&
+                                    !emailField.getText().trim().isEmpty() &&
+                                    !confirmEmailField.getText().trim().isEmpty() &&
                                     !passwordField.getText().trim().isEmpty() &&
-                                    !confirmPasswordField.getText().trim().isEmpty();
+                                    !usernameField.getText().trim().isEmpty();
 
-        signUpButton.setDisable(!(isUsernameValid && isPasswordValid && isConfirmPasswordValid && isAllFieldsFilled));
+        signUpButton.setDisable(!(isEmailValid && isPasswordValid && isUsernameValid && isRoleSelected && isAllFieldsFilled));
+    }
+
+    private void setChoiceBoxStyle() {
+        // Preserve existing style from FXML and add new styles conditionally
+        String baseStyle = "-fx-background-color: black; -fx-border-width: 1px 1px 1px 1px; -fx-border-color: #c00000;";
+        if ("Select your role".equals(roleChoiceBox.getValue())) {
+            // Apply additional styles for placeholder text
+            roleChoiceBox.setStyle(baseStyle + "-fx-border-color: #c00000;");
+        } else {
+            // Reset to the base style when a valid option is selected
+            roleChoiceBox.setStyle(baseStyle + "-fx-border-color: #c00000;");
+        }
     }
 }
