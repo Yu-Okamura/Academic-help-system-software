@@ -431,10 +431,10 @@ public class Manager {
 		
 	}
 	
-	public String generateOTP() {
+	public String generateOTP(String unixTime) {
 		
 		//Timestamp for password - current time + 15 minutes
-		long unixTime = (System.currentTimeMillis() + 900000) / 1000L;
+		//long unixTime = (System.currentTimeMillis() + 900000) / 1000L;
 		
 		//Characters for password
 		//Function partially sourced from https://www.baeldung.com/java-random-string
