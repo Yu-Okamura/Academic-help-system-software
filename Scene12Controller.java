@@ -25,43 +25,47 @@ public class Scene12Controller {
     @FXML
     private Hyperlink signOutLink;
 
-    private int roleid; // Max modify here
-    
-    private User passedUser;
+    private int roleid; // Role ID to manage user permissions
+
+    private User passedUser; // User object to carry user data
 
     @FXML
     public void initialize() {
 
-    	// Initialize the choice box with default text
+        // Initialize the choice box with default text and disable the sign-in button initially
         roleChoiceBox.setValue("Select a role");
         signInButton.setDisable(true);
 
-        // Populate the choice box based on the value of roleid
+        // Set listener for mouse click to populate roles based on user role
         roleChoiceBox.setOnMouseClicked(this::handleChoiceBoxClick);
 
-        // Add listener to enable the sign-in button when a valid role is selected
+        // Add listener to validate the role selection and enable the sign-in button if valid
         roleChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> validateChoice());
     }
     
+    // Handles the mouse click event on the choice box
     private void handleChoiceBoxClick(MouseEvent event) {
         System.out.println("ChoiceBox clicked!");
         Manager admin = new Manager();
-        admin.connect();
+        admin.connect(); // Connect to the database
         
+        // Get the current stage and retrieve user data
         Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
         User passedUser = (User) stage.getUserData();
         
         this.passedUser = passedUser;
-        		
+                
+        // Get the role of the user and populate the choice box based on it
         int userRole = admin.getUserRole(passedUser);
         
         populateRoles(userRole);
     }
 
-    private void populateRoles(int roleNum) { // role id independent.
-      
-        this.roleid = roleNum; // its an example. Max modify here.
-
+    // Populates the role options in the choice box based on the user's role ID
+    private void populateRoles(int roleNum) {
+        this.roleid = roleNum; // Set the role ID
+        
+        // Populate the choice box with different roles based on roleid
         switch (this.roleid) {
             case 4:
                 roleChoiceBox.getItems().setAll(Arrays.asList("Administrator", "Student"));
@@ -76,78 +80,72 @@ public class Scene12Controller {
                 roleChoiceBox.getItems().setAll(Arrays.asList("Administrator", "Student", "Instructor"));
                 break;
             default:
-                roleChoiceBox.getItems().setAll("Select a role");
+                roleChoiceBox.getItems().setAll("Select a role"); // Default text if no valid role ID
                 break;
         }
     }
 
+    // Handles the sign-in button click event
     @FXML
     private void handleSignIn(ActionEvent event) {
         System.out.println("Role selected: " + roleChoiceBox.getValue());
-        // Proceed with application logic based on selected role
-        // save roleid value based on the choice. 
-        //if admin =1, student =2, inst=3. Keep this value in main.
-        //4,5,7
+        
+        // Load a different scene based on the user's role ID
         if (this.roleid == 4 || this.roleid == 5 || this.roleid == 7) {
-        	FXMLLoader loader = new FXMLLoader(getClass().getResource("scene13.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("scene13.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent root;
             
-        	try {
-    			root = loader.load();
-    			stage.setUserData(this.passedUser);
-                
-                stage.setScene(new Scene(root, 600, 400));
+            try {
+                root = loader.load();
+                stage.setUserData(this.passedUser);
+                stage.setScene(new Scene(root, 600, 400)); // Set scene dimensions
                 stage.show();
-    		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
+            } catch (IOException e) {
+                e.printStackTrace(); // Print stack trace if an exception occurs
+            }
         } else {
-        	FXMLLoader loader = new FXMLLoader(getClass().getResource("scene10.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("scene10.fxml"));
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             Parent root;
             
-        	try {
-    			root = loader.load();
-    			stage.setUserData(this.passedUser);
-                
-                stage.setScene(new Scene(root, 600, 400));
+            try {
+                root = loader.load();
+                stage.setUserData(this.passedUser);
+                stage.setScene(new Scene(root, 600, 400)); // Set scene dimensions
                 stage.show();
-    		} catch (IOException e) {
-    			// TODO Auto-generated catch block
-    			e.printStackTrace();
-    		}
+            } catch (IOException e) {
+                e.printStackTrace(); // Print stack trace if an exception occurs
+            }
         }
-        
-        
-
     }
 
+    // Handles the sign-out link click event
     @FXML
     private void handleSignOut(ActionEvent event) {
-        switchScene(event, "scene1.fxml");
+        switchScene(event, "scene1.fxml"); // Switch to Scene 1
     }
 
+    // Validates the choice made in the choice box
     private void validateChoice() {
-        // Enable the proceed button only if a valid role is selected
+        // Enable the sign-in button only if a valid role is selected
         String selectedRole = roleChoiceBox.getValue();
         signInButton.setDisable("Select a role".equals(selectedRole));
     }
 
+    // Method to switch scenes based on the event and the specified FXML file
     private void switchScene(ActionEvent event, String fxmlFile) {
         try {
-            // Load the FXML for the new scene
+            // Load the FXML file for the new scene
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
 
             // Get the current stage (window) and set the new scene
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 600, 400));
-            stage.show();
+            stage.setScene(new Scene(root, 600, 400)); // Set scene dimensions
+            stage.show(); // Display the updated stage
         } catch (IOException e) {
-            e.printStackTrace();
+            e.printStackTrace(); // Print stack trace if an I/O error occurs
         }
     }
-       
 }
