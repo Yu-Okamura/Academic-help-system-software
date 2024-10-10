@@ -1,4 +1,4 @@
-package cse360_proj1;
+package application;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -26,36 +26,6 @@ mysql> describe userinfo;
 | ID       | int         | NO   | PRI | NULL    | auto_increment |
 +----------+-------------+------+-----+---------+----------------+
 
-
-mysql> DESCRIBE roles;
-+-----------+-------------+------+-----+---------+----------------+
-| Field     | Type        | Null | Key | Default | Extra          |
-+-----------+-------------+------+-----+---------+----------------+
-| role_id   | int         | NO   | PRI | NULL    | auto_increment |
-| role_name | varchar(50) | NO   |     | NULL    |                |
-+-----------+-------------+------+-----+---------+----------------+
-2 rows in set (0.00 sec)
-
-mysql> SELECT * FROM roles;
-+---------+------------+
-| role_id | role_name  |
-+---------+------------+
-|       1 | admin      |
-|       2 | student    |
-|       3 | instructor |
-+---------+------------+
-3 rows in set (0.01 sec)
-
-
-mysql> describe user_roles;
-+---------+------+------+-----+---------+-------+
-| Field   | Type | Null | Key | Default | Extra |
-+---------+------+------+-----+---------+-------+
-| user_id | int  | NO   | PRI | NULL    |       |
-| role_id | int  | NO   | PRI | NULL    |       |
-+---------+------+------+-----+---------+-------+
-2 rows in set (0.00 sec)
-
 createUser() : creates a user in the database, makes them admin if they have ID = 1
 updateUser() : updates a user based on their ID to a new a user object
 giveRole() : assigns a role to a user ID
@@ -70,11 +40,10 @@ public class User {
 	public String password;
 	public String name;
 	public String email;
-
 	
     static String url = "jdbc:mysql://localhost:3306/CSE360";
     static String root_user = "root";
-    static String root_password = "Password321!";
+    static String root_password = "Kingfish314!";
     
     static Connection connection = null;
     
@@ -86,168 +55,31 @@ public class User {
     	this.email = email;
     }
 	
-	
-	//loads User object into database
-	public static void createUser(User user, String invite_code) {
-		int num_users = getUserCount(connection);
-		String query = "INSERT INTO userinfo (username, password, name, email) VALUES(?, ?, ?, ?)";
-		
-		try(PreparedStatement statement = connection.prepareStatement(query)){
-			
-			statement.setString(1, user.username);
-			statement.setString(2, user.password);
-			statement.setString(3, user.name);
-			statement.setString(4,  user.email);
-			
-			int rowsAffected = statement.executeUpdate();
-			
-			if (rowsAffected < 1) {
-				System.out.println("Error: user unsuccesfully created.");
-			}
-		}
-		catch(SQLException e) {
-			System.out.println("SQL Error: " + e.getMessage());
-			e.printStackTrace();
-		}
-		
-		//if user is the first to login, give admin credentials
-		if(num_users == 0) {
-			int userID = getUserID(user);
-			
-			giveRole(userID, 1);
-		}
-	}
-	
-	//updating userinfo, make a new User object with
-	public static void updateUser(int userID, User user) {
-		String query = "UPDATE userinfo SET Username = ?, Password = ?, Name = ?, Email = ? WHERE ID = ?";
-		
-		try(PreparedStatement statement = connection.prepareStatement(query)){
-			
-			statement.setString(1, user.username);
-			statement.setString(2, user.password);
-			statement.setString(3, user.name);
-			statement.setString(4, user.email);
-			statement.setInt(5, userID);
-			
-			int rowsAffected = statement.executeUpdate();
-			
-			if(rowsAffected < 1) {
-				System.out.println("Error: user unsuccesfully updated.");
-			}
-		}
-		catch(SQLException e) {
-			System.out.println("SQL Error: " + e.getMessage());
-			e.printStackTrace();
-		}
-	}
-	
-	//gives a user a specific role. admin: 1, instructor: 2, student: 3
-	//use getUserID to get the ID
-	public static void giveRole(int userID, int role) {
-		String query = "INSERT INTO user_roles(user_id, role_id) VALUES(?, ?)";
-		
-		try(PreparedStatement statement = connection.prepareStatement(query)){
-			
-			statement.setInt(1, userID);
-			statement.setInt(2, role);
-			
-			int rowsAffected = statement.executeUpdate();
-			
-			if(rowsAffected < 1) {
-				System.out.println("Error: unable to add role to user");
-			}
-		}
-		catch(SQLException e) {
-			System.out.println("SQL Error: " + e.getMessage());
-		}
-	}
-	
-	
-	/*
-	 * Utility and information gathering functions
-	 */
-	
-	//connects to the databse. Run before accessing database information
-	public static Connection connect() {
-		Connection connection = null;
-		
-		try {
-			connection = DriverManager.getConnection(url, root_user, root_password);
-			System.out.println("Connection established.");
-		}
-		catch (SQLException e) {
-			System.out.println("SQL Error: " + e.getMessage());
-			e.printStackTrace();
-		}
-		
-		return connection;
-	}
-	
-	//returns the total number of active users
-	public static int getUserCount(Connection connection) {
-		int user_count = 0;
-		String query = "SELECT COUNT(*) FROM userinfo";
-		
-		try (PreparedStatement statement = connection.prepareStatement(query);
-				ResultSet result = statement.executeQuery()){
-			
-			if(result.next()) {
-				user_count = result.getInt(1);
-			}
-		}
-		catch (SQLException e) {
-	        System.out.println("SQL Error: " + e.getMessage());
-	        e.printStackTrace();
-		}
-		
-		return user_count;
-	}
-	
-	//returns the integer ID associated with a Username in the database
-	public static int getUserID(User user) {
-		//if no user exists
-		int ID = -1;
-		
-		String query = "SELECT ID FROM userinfo WHERE Username = ?";
-		
-		try(PreparedStatement statement = connection.prepareStatement(query)){
-			
-			statement.setString(1, user.username);
-			
-			try(ResultSet result = statement.executeQuery()){
-				if(result.next()) {
-					ID = result.getInt("ID");
-				}
-				else {
-					System.out.println("Error: User not found in database.");
-				}
-			}
-			
-		}
-		catch(SQLException e) {
-			System.out.println("SQL Error: " + e.getMessage());
-			e.printStackTrace();
-		}
-		
-		return ID;
-	}
-
     public static void main(String[] args) {
+    	/*
     	connection = connect();
     	User Billy = new User("BillEEEEEBob", "password", "Bill", "bill@gmail.com");
+    	User Bobby = new User("boobob", "password", "boeol", "obbueut@gmail.com");
+
     	
     	//int userID = getUserID(Billy);
     	//System.out.println(userID);
-    	updateUser(1, Billy);
+    	createUser(Billy, "hello");
+    	createUser(Bobby, "12345");
     	
-    	//giveRole(1, 1);
-
+    	giveRole(1, 4);
+    	
+    	
+    	getUserInfo();
+    	
+    	
+    	
     	try {
     		connection.close();
     	}
     	catch (SQLException e) {
     		e.printStackTrace();
     	}
+    	*/
     }
 }
