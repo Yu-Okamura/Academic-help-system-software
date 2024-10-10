@@ -25,11 +25,12 @@
                </font>
             </Text>
             <Text fill="WHITE" layoutX="20.0" layoutY="87.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Generate invite code" />
+            <Text fill="WHITE" layoutX="20.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reset user password" />
             <ChoiceBox fx:id="generateInviteChoiceBox" layoutX="20.0" layoutY="91.0" prefHeight="25.0" prefWidth="65.0" />
             <Hyperlink fx:id="generateLink" layoutX="89.0" layoutY="91.0" onAction="#handleGenerateInvite" style="-fx-background-color: transparent;" text="Generate" textFill="#00ffc9" />
             <Text fx:id="inviteCodeText" fill="WHITE" layoutX="146.0" layoutY="107.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(invite code)" />
-            <TextField fx:id="resetEmailField" layoutX="20.0" layoutY="142.0" prefHeight="27.0" prefWidth="144.0" promptText="User email or username" style="-fx-border-color: #00ffc9; -fx-border-width: 1px 1px 1px 1px; -fx-background-color: transparent; -fx-text-fill: white;" />
-            <Hyperlink fx:id="resetLink" layoutX="169.0" layoutY="144.0" onAction="#handleResetPassword" style="-fx-background-color: transparent;" text="Reset" textFill="#00ffc9" />
+            <TextField fx:id="resetEmailField" layoutX="20.0" layoutY="142.0" prefHeight="27.0" prefWidth="141.0" promptText="User email or username" style="-fx-border-color: #00ffc9; -fx-border-width: 1px 1px 1px 1px; -fx-background-color: transparent; -fx-text-fill: white;" />
+            <Hyperlink fx:id="resetLink" layoutX="233.0" layoutY="144.0" onAction="#handleResetPassword" style="-fx-background-color: transparent;" text="Reset" textFill="#00ffc9" />
             <Text fx:id="otpText" fill="WHITE" layoutX="20.0" layoutY="180.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(one-time password)" />
             <ChoiceBox fx:id="editRoleChoiceBox" layoutX="169.0" layoutY="207.0" prefHeight="25.0" prefWidth="45.0" />
             <TextField fx:id="editRoleEmailField" layoutX="20.0" layoutY="206.0" prefHeight="27.0" prefWidth="144.0" promptText="User email or username" style="-fx-border-color: #00ffc9; -fx-border-width: 1px 1px 1px 1px; -fx-background-color: transparent; -fx-text-fill: white;" />
@@ -38,10 +39,10 @@
             <Hyperlink fx:id="deleteLink" layoutX="170.0" layoutY="259.0" onAction="#handleDeleteUser" style="-fx-background-color: transparent;" text="Delete" textFill="RED" />
             <TextField fx:id="confirmDeleteField" layoutX="20.0" layoutY="291.0" prefHeight="27.0" prefWidth="210.0" promptText="Are you sure? Type 'Yes' to proceed." style="-fx-border-color: #00ffc9; -fx-border-width: 1px 1px 1px 1px; -fx-background-color: transparent; -fx-text-fill: white;" visible="false" />
             <Hyperlink fx:id="listLink" layoutX="89.0" layoutY="324.0" onAction="#handleListUsers" prefHeight="23.0" prefWidth="28.0" style="-fx-background-color: transparent;" text="List" textFill="#00ffc9" />
-            <Text fill="WHITE" layoutX="20.0" layoutY="138.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Reset user password" />
             <Text fill="WHITE" layoutX="20.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit user role" />
             <Text fill="WHITE" layoutX="20.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete user account" />
             <Text fill="WHITE" layoutX="20.0" layoutY="340.0" strokeType="OUTSIDE" strokeWidth="0.0" text="List all users" />
+            <TextField fx:id="unixTimeField" layoutX="164.0" layoutY="142.0" prefHeight="27.0" prefWidth="67.0" promptText="Unix time" style="-fx-border-color: #00ffc9; -fx-border-width: 1px 1px 1px 1px; -fx-background-color: transparent; -fx-text-fill: white;" />
          </children>
       </AnchorPane>
    </right>
