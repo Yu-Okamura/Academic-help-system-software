@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Scene14CreateGroup">
+   <right>
+      <AnchorPane prefHeight="360.0" prefWidth="277.0" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
+         <children>
+            <Hyperlink fx:id="signOutLink" layoutX="229.0" layoutY="1.0" onAction="#handleSignOut" style="-fx-background-color: transparent;" text="Sign out" textFill="#00ffc9">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Hyperlink>
+            <Text fill="#00ffc9" layoutX="73.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit help articles">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Hyperlink fx:id="createArticleLink" layoutX="84.0" layoutY="95.0" onAction="#handleCreateArticle" style="-fx-background-color: transparent;" text="Create a new article" textFill="#00ffc9" />
+            <Hyperlink fx:id="updateArticleLink" layoutX="90.0" layoutY="120.0" onAction="#handleUpdateArticle" style="-fx-background-color: transparent;" text="Update an article" textFill="#00ffc9" />
+            <Hyperlink fx:id="listArticlesLink" layoutX="106.0" layoutY="170.0" onAction="#handleListArticles" style="-fx-background-color: transparent;" text="List articles" textFill="#00ffc9" />
+            <Hyperlink fx:id="deleteArticleLink" layoutX="96.0" layoutY="145.0" onAction="#handleDeleteArticle" style="-fx-background-color: transparent;" text="Delete article(s)" textFill="#00ffc9" />
+            <Hyperlink fx:id="fullBackupLink" layoutX="103.0" layoutY="245.0" onAction="#handleFullBackup" style="-fx-background-color: transparent;" text="Full backup" textFill="#00ffc9" />
+            <Hyperlink fx:id="groupBackupLink" layoutX="96.0" layoutY="270.0" onAction="#handleGroupBackup" style="-fx-background-color: transparent;" text="Group backup" textFill="#00ffc9" />
+            <Hyperlink fx:id="fullRestoreLink" layoutX="103.0" layoutY="295.0" onAction="#handleFullRestore" style="-fx-background-color: transparent;" text="Full restore" textFill="#00ffc9" />
+            <Hyperlink fx:id="listGroupsLink" layoutX="105.0" layoutY="220.0" onAction="#handleListGroups" style="-fx-background-color: transparent;" text="List groups" textFill="#00ffc9" />
+            <Hyperlink fx:id="createGroupLink" layoutX="84.0" layoutY="195.0" onAction="#handleCreateGroup" style="-fx-background-color: transparent;" text="Create a new group" textFill="#00ffc9" />
+            <Hyperlink fx:id="groupRestoreLink" layoutX="96.0" layoutY="320.0" onAction="#handleGroupRestore" style="-fx-background-color: transparent;" text="Group restore" textFill="#00ffc9" />
+         </children>
+      </AnchorPane>
+   </right>
+   <center>
+      <AnchorPane prefHeight="401.0" prefWidth="323.0" style="-fx-background-color: #000000;">
+         <children>
+             <Hyperlink alignment="CENTER" layoutX="74.0" layoutY="32.0" prefHeight="35.0" prefWidth="176.0" style="-fx-background-color: transparent;" text="Create group" textFill="#00ffc9">
+                <font>
+                   <Font size="18.0" />
+                </font>
+             </Hyperlink>
+             <Text fill="WHITE" layoutX="37.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter group name to add" wrappingWidth="148.0" />
+             <TextField fx:id="groupNameField" layoutX="37.0" layoutY="104.0" prefHeight="25.0" prefWidth="249.0" />
+             <Button fx:id="submitButton" disable="true" layoutX="87.0" layoutY="173.0" mnemonicParsing="false" onAction="#handleSubmit" prefHeight="27.0" prefWidth="151.0" style="-fx-background-color: #00ffc9;" text="Add" />
+            <Text fill="WHITE" layoutX="37.0" layoutY="151.0" strokeType="OUTSIDE" strokeWidth="0.0" text="*&quot;List groups&quot; to check group IDs" wrappingWidth="243.0" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>
