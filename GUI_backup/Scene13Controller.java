@@ -18,7 +18,7 @@ public class Scene13Controller {
     @FXML
     private ChoiceBox<Integer> generateInviteChoiceBox, editRoleChoiceBox;
     @FXML
-    private Hyperlink generateLink, resetLink, setRoleLink, deleteLink, listLink, signOutLink;
+    private Hyperlink generateLink, resetLink, setRoleLink, deleteLink, listLink, editLink, signOutLink; //phase 2
     @FXML
     private Text inviteCodeText, otpText;
     @FXML
@@ -75,6 +75,11 @@ public class Scene13Controller {
     @FXML
     private void handleListUsers(ActionEvent event) {
         System.out.println("Listed all users");
+    }
+    
+    @FXML //phase 2
+    private void handleEditArticles(ActionEvent event) { 
+    	switchScene(event, "scene14.fxml");
     }
 
     @FXML
