@@ -11,7 +11,7 @@ import java.io.IOException;
 
 public class Scene14Controller {
 
-    @FXML
+	@FXML
     private void handleSignOut(ActionEvent event) {
         switchScene(event, "scene1.fxml");
     }
@@ -37,23 +37,13 @@ public class Scene14Controller {
     }
 
     @FXML
-    private void handleFullBackup(ActionEvent event) {
-        switchScene(event, "scene14BackupFull.fxml");
+    private void handleBackup(ActionEvent event) {
+        switchScene(event, "scene14Backup.fxml");
     }
 
     @FXML
-    private void handleGroupBackup(ActionEvent event) {
-        switchScene(event, "scene14BackupGroup.fxml");
-    }
-
-    @FXML
-    private void handleFullRestore(ActionEvent event) {
-        switchScene(event, "scene14RestoreFull.fxml");
-    }
-    
-    @FXML
-    private void handleGroupRestore(ActionEvent event) {
-        switchScene(event, "scene14RestoreGroup.fxml");
+    private void handleRestore(ActionEvent event) {
+        switchScene(event, "scene14Restore.fxml");
     }
 
     @FXML

@@ -13,7 +13,7 @@ import javafx.scene.Scene;
 
 import java.io.IOException;
 
-public class Scene14ListArticle {
+public class Scene14Backup {
 	
 	@FXML
     private void handleSignOut(ActionEvent event) {
@@ -59,9 +59,9 @@ public class Scene14ListArticle {
     private void handleCreateGroup(ActionEvent event) {
         switchScene(event, "scene14CreateGroup.fxml");
     }
-
+    
     @FXML
-    private TextField groupIDField;
+    private TextField groupIDField, backupPathField;
 
     @FXML
     private Button proceedButton;
@@ -71,40 +71,54 @@ public class Scene14ListArticle {
 
     @FXML
     public void initialize() {
-        // Add listener to the groupIDField to enable the proceed button when not empty
-        groupIDField.textProperty().addListener((observable, oldValue, newValue) -> validateForm());
+        // Disable proceed button by default
+        proceedButton.setDisable(true);
+
+        // Add listeners to both fields to enable the button when both are filled
+        groupIDField.textProperty().addListener((obs, oldVal, newVal) -> validateFields());
+        backupPathField.textProperty().addListener((obs, oldVal, newVal) -> validateFields());
     }
 
-    private void validateForm() {
-        // Enable the proceed button only if the groupIDField is not empty
-        boolean isFieldFilled = !groupIDField.getText().trim().isEmpty();
-        proceedButton.setDisable(!isFieldFilled);
+    private void validateFields() {
+        // Enable proceed button only if both fields are not empty
+        boolean isGroupIDFilled = !groupIDField.getText().trim().isEmpty();
+        boolean isBackupPathFilled = !backupPathField.getText().trim().isEmpty();
+        proceedButton.setDisable(!(isGroupIDFilled && isBackupPathFilled));
     }
 
     @FXML
     private void handleProceed(ActionEvent event) {
-        // Retrieve the group ID entered by the user
         String groupID = groupIDField.getText().trim();
+        String backupPath = backupPathField.getText().trim();
 
-        if (groupID.equals("0")) {
-            System.out.println("Listing all articles");
-        } else {
-            System.out.println("Listing group " + groupID);
+        try {
+            int id = Integer.parseInt(groupID);
+            if (id == 0) {
+                System.out.println("All articles are being backed up.");
+            } else if (id > 0) {
+                System.out.println("Articles in group ID " + id + " are being backed up.");
+            } else {
+                System.out.println("Invalid group ID.");
+            }
+
+            // Print the backup path
+            System.out.println("Backup path: " + backupPath);
+
+            // Switch to Scene14 (or previous scene)
+            switchScene(event, "scene14.fxml");
+        } catch (NumberFormatException e) {
+            System.out.println("Invalid group ID.");
         }
-
-        // Switch to scene14ListArticle2.fxml
-        switchScene(event, "scene14ListArticle2.fxml");
     }
 
     private void switchScene(ActionEvent event, String fxmlFile) {
         try {
-            // Load the FXML for the new scene
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
 
-            // Get the current stage (window) and set the new scene
+            // Get current stage
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 600, 400));
+            stage.setScene(new Scene(root, 600, 400)); // Set the new scene dimensions as needed
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();

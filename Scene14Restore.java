@@ -1,8 +1,10 @@
 package application;
 
+import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
+import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.TextField;
 import javafx.scene.control.Hyperlink;
 import javafx.stage.Stage;
@@ -13,7 +15,7 @@ import javafx.scene.Scene;
 
 import java.io.IOException;
 
-public class Scene14ListArticle {
+public class Scene14Restore {
 	
 	@FXML
     private void handleSignOut(ActionEvent event) {
@@ -61,7 +63,10 @@ public class Scene14ListArticle {
     }
 
     @FXML
-    private TextField groupIDField;
+    private TextField backupPathField;
+
+    @FXML
+    private ChoiceBox<String> restoreOptionChoiceBox;
 
     @FXML
     private Button proceedButton;
@@ -71,29 +76,36 @@ public class Scene14ListArticle {
 
     @FXML
     public void initialize() {
-        // Add listener to the groupIDField to enable the proceed button when not empty
-        groupIDField.textProperty().addListener((observable, oldValue, newValue) -> validateForm());
+        // Set the items for the choice box
+        restoreOptionChoiceBox.setItems(FXCollections.observableArrayList("Overwrite restore", "Additive restore"));
+        restoreOptionChoiceBox.setValue("Select");
+
+        // Disable proceed button by default
+        proceedButton.setDisable(true);
+
+        // Add listeners to the fields to enable the button when both are filled
+        backupPathField.textProperty().addListener((obs, oldVal, newVal) -> validateFields());
+        restoreOptionChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> validateFields());
     }
 
-    private void validateForm() {
-        // Enable the proceed button only if the groupIDField is not empty
-        boolean isFieldFilled = !groupIDField.getText().trim().isEmpty();
-        proceedButton.setDisable(!isFieldFilled);
+    private void validateFields() {
+        // Enable proceed button only if both fields are not empty and a choice is selected
+        boolean isBackupPathFilled = !backupPathField.getText().trim().isEmpty();
+        boolean isChoiceSelected = restoreOptionChoiceBox.getValue() != null && !restoreOptionChoiceBox.getValue().equals("Select");
+        proceedButton.setDisable(!(isBackupPathFilled && isChoiceSelected));
     }
 
     @FXML
     private void handleProceed(ActionEvent event) {
-        // Retrieve the group ID entered by the user
-        String groupID = groupIDField.getText().trim();
+        String backupPath = backupPathField.getText().trim();
+        String restoreOption = restoreOptionChoiceBox.getValue();
 
-        if (groupID.equals("0")) {
-            System.out.println("Listing all articles");
-        } else {
-            System.out.println("Listing group " + groupID);
-        }
+        // Print the restore option and path
+        System.out.println("Restore option selected: " + restoreOption);
+        System.out.println("Backup path: " + backupPath);
 
-        // Switch to scene14ListArticle2.fxml
-        switchScene(event, "scene14ListArticle2.fxml");
+        // Switch to Scene14 (or previous scene)
+        switchScene(event, "scene14.fxml");
     }
 
     private void switchScene(ActionEvent event, String fxmlFile) {

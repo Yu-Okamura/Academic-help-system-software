@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Hyperlink?>
-<?import javafx.scene.control.TableColumn?>
-<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
@@ -26,32 +26,26 @@
             <Hyperlink fx:id="updateArticleLink" layoutX="90.0" layoutY="120.0" onAction="#handleUpdateArticle" style="-fx-background-color: transparent;" text="Update an article" textFill="#00ffc9" />
             <Hyperlink fx:id="listArticlesLink" layoutX="106.0" layoutY="170.0" onAction="#handleListArticles" style="-fx-background-color: transparent;" text="List articles" textFill="#00ffc9" />
             <Hyperlink fx:id="deleteArticleLink" layoutX="96.0" layoutY="145.0" onAction="#handleDeleteArticle" style="-fx-background-color: transparent;" text="Delete article(s)" textFill="#00ffc9" />
-            <Hyperlink fx:id="fullBackupLink" layoutX="103.0" layoutY="245.0" onAction="#handleFullBackup" style="-fx-background-color: transparent;" text="Full backup" textFill="#00ffc9" />
-            <Hyperlink fx:id="groupBackupLink" layoutX="96.0" layoutY="270.0" onAction="#handleGroupBackup" style="-fx-background-color: transparent;" text="Group backup" textFill="#00ffc9" />
-            <Hyperlink fx:id="fullRestoreLink" layoutX="103.0" layoutY="295.0" onAction="#handleFullRestore" style="-fx-background-color: transparent;" text="Full restore" textFill="#00ffc9" />
+            <Hyperlink fx:id="backupLink" layoutX="115.0" layoutY="245.0" onAction="#handleBackup" style="-fx-background-color: transparent;" text="Backup" textFill="#00ffc9" />
             <Hyperlink fx:id="listGroupsLink" layoutX="105.0" layoutY="220.0" onAction="#handleListGroups" style="-fx-background-color: transparent;" text="List groups" textFill="#00ffc9" />
             <Hyperlink fx:id="createGroupLink" layoutX="84.0" layoutY="195.0" onAction="#handleCreateGroup" style="-fx-background-color: transparent;" text="Create a new group" textFill="#00ffc9" />
-            <Hyperlink fx:id="groupRestoreLink" layoutX="96.0" layoutY="320.0" onAction="#handleGroupRestore" style="-fx-background-color: transparent;" text="Group restore" textFill="#00ffc9" />
+            <Hyperlink fx:id="restoreLink" layoutX="114.0" layoutY="270.0" onAction="#handleRestore" style="-fx-background-color: transparent;" text="Restore" textFill="#00ffc9" />
          </children>
       </AnchorPane>
    </right>
-   <center>
-      <AnchorPane prefHeight="401.0" prefWidth="323.0" style="-fx-background-color: #000000;">
+   <left>
+      <AnchorPane prefHeight="401.0" prefWidth="323.0" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
          <children>
-             <Hyperlink alignment="CENTER" layoutX="74.0" layoutY="32.0" prefHeight="35.0" prefWidth="176.0" style="-fx-background-color: transparent;" text="Article list" textFill="#00ffc9">
+             <Hyperlink alignment="CENTER" layoutX="74.0" layoutY="32.0" prefHeight="35.0" prefWidth="176.0" style="-fx-background-color: transparent;" text="Select group to list" textFill="#00ffc9">
                 <font>
                    <Font size="18.0" />
                 </font>
              </Hyperlink>
-            <TableView fx:id="articleTable" layoutX="19.0" layoutY="77.0" prefHeight="305.0" prefWidth="288.0" style="-fx-font-size: 8;">
-              <columns>
-                <TableColumn fx:id="titleColumn" prefWidth="133.0" text="Title" />
-                <TableColumn fx:id="keywordsColumn" prefWidth="67.0" text="Keywords" />
-                <TableColumn fx:id="levelColumn" prefWidth="33.0" text="Level" />
-                <TableColumn fx:id="groupIdsColumn" prefWidth="54.0" text="Group IDs" />
-              </columns>
-            </TableView>
+            <Text fill="WHITE" layoutX="92.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter a group ID" wrappingWidth="156.0" />
+            <TextField fx:id="groupIDField" layoutX="92.0" layoutY="113.0" prefHeight="25.0" prefWidth="139.0" />
+            <Button fx:id="proceedButton" disable="true" layoutX="93.0" layoutY="163.0" mnemonicParsing="false" onAction="#handleProceed" prefHeight="25.0" prefWidth="139.0" style="-fx-background-color: #00ffc9;" text="Proceed" />
+            <Text fill="WHITE" layoutX="92.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(enter 0 to list all articles)" wrappingWidth="156.0" />
          </children>
       </AnchorPane>
-   </center>
+   </left>
 </BorderPane>

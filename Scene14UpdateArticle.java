@@ -41,23 +41,13 @@ public class Scene14UpdateArticle {
     }
 
     @FXML
-    private void handleFullBackup(ActionEvent event) {
-        switchScene(event, "scene14BackupFull.fxml");
+    private void handleBackup(ActionEvent event) {
+        switchScene(event, "scene14Backup.fxml");
     }
 
     @FXML
-    private void handleGroupBackup(ActionEvent event) {
-        switchScene(event, "scene14BackupGroup.fxml");
-    }
-
-    @FXML
-    private void handleFullRestore(ActionEvent event) {
-        switchScene(event, "scene14RestoreFull.fxml");
-    }
-    
-    @FXML
-    private void handleGroupRestore(ActionEvent event) {
-        switchScene(event, "scene14RestoreGroup.fxml");
+    private void handleRestore(ActionEvent event) {
+        switchScene(event, "scene14Restore.fxml");
     }
 
     @FXML
@@ -69,7 +59,7 @@ public class Scene14UpdateArticle {
     private void handleCreateGroup(ActionEvent event) {
         switchScene(event, "scene14CreateGroup.fxml");
     }
-
+    
     @FXML
     private TextField articleIDField;
 
