@@ -105,12 +105,13 @@ public class Scene14ListArticle2 {
     }
 
     public void loadArticleData(int groupID) {
-        // Empty function for now (placeholder for server logic)
-        // In the future, this would fetch data from a server or database
+        //Function that can be called from previous scene to populate data in this scene
         System.out.println("Fetching articles from the server...");
         Manager admin = new Manager();
         admin.connect();
+	//Array of all articles
         String[][] articleArray = admin.getArticleArray();
+	//If we want to load all articles
         if (groupID == 0) {
         	for(String[] articleDataArr : articleArray) {
             	Article article = new Article(
@@ -122,7 +123,7 @@ public class Scene14ListArticle2 {
                     
                     articleData.add(article);
             }
-        } else {
+        } else { //If we're only loading one group's articles
         	for(String[] articleDataArr : articleArray) {
         		String[] groupIdsArray = articleDataArr[2].split(",");
         		for (String groupId : groupIdsArray) {
