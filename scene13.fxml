@@ -38,27 +38,29 @@
             <TextField fx:id="deleteEmailField" layoutX="20.0" layoutY="257.0" prefHeight="27.0" prefWidth="144.0" promptText="User email or username" style="-fx-border-color: #00ffc9; -fx-border-width: 1px 1px 1px 1px; -fx-background-color: transparent; -fx-text-fill: white;" />
             <Hyperlink fx:id="deleteLink" layoutX="170.0" layoutY="259.0" onAction="#handleDeleteUser" style="-fx-background-color: transparent;" text="Delete" textFill="RED" />
             <TextField fx:id="confirmDeleteField" layoutX="20.0" layoutY="291.0" prefHeight="27.0" prefWidth="210.0" promptText="Are you sure? Type 'Yes' to proceed." style="-fx-border-color: #00ffc9; -fx-border-width: 1px 1px 1px 1px; -fx-background-color: transparent; -fx-text-fill: white;" visible="false" />
-            <Hyperlink fx:id="listLink" layoutX="89.0" layoutY="324.0" onAction="#handleListUsers" prefHeight="23.0" prefWidth="28.0" style="-fx-background-color: transparent;" text="List" textFill="#00ffc9" />
+            <Hyperlink fx:id="listLink" layoutX="85.0" layoutY="324.0" onAction="#handleListUsers" prefHeight="23.0" prefWidth="28.0" style="-fx-background-color: transparent;" text="List" textFill="#00ffc9" />
             <Text fill="WHITE" layoutX="20.0" layoutY="202.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit user role" />
             <Text fill="WHITE" layoutX="20.0" layoutY="253.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Delete user account" />
             <Text fill="WHITE" layoutX="20.0" layoutY="340.0" strokeType="OUTSIDE" strokeWidth="0.0" text="List all users" />
             <TextField fx:id="unixTimeField" layoutX="164.0" layoutY="142.0" prefHeight="27.0" prefWidth="67.0" promptText="Unix time" style="-fx-border-color: #00ffc9; -fx-border-width: 1px 1px 1px 1px; -fx-background-color: transparent; -fx-text-fill: white;" />
+            <Text fill="WHITE" layoutX="148.0" layoutY="340.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit articles" />
+            <Hyperlink fx:id="editLink" layoutX="210.0" layoutY="324.0" onAction="#handleEditArticles" prefHeight="23.0" prefWidth="35.0" style="-fx-background-color: transparent;" text="Edit" textFill="#00ffc9" />
          </children>
       </AnchorPane>
    </right>
    <center>
       <AnchorPane prefHeight="360.0" prefWidth="316.0" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
          <children>
-            <TableView fx:id="userTable" layoutX="16.0" layoutY="18.0" prefHeight="365.0" prefWidth="292.0" style="-fx-border-color: #00ffc9;">
-              <columns>
-                <TableColumn prefWidth="50.0" text="UN" />
-                <TableColumn prefWidth="50.0" text="F" />
-                <TableColumn prefWidth="50.0" text="L" />
-                <TableColumn prefWidth="50.0" text="M" />
-                <TableColumn prefWidth="50.0" text="P" />
-                <TableColumn prefWidth="50.0" text="Role ID" />
-              </columns>
-            </TableView>
+            <TableView fx:id="userTable" layoutX="16.0" layoutY="18.0" prefHeight="365.0" prefWidth="292.0" style="-fx-border-color: #00ffc9; -fx-font-size: 8;">
+    			<columns>
+       				<TableColumn fx:id="usernameColumn" prefWidth="50.0" text="Username" />
+        			<TableColumn fx:id="firstNameColumn" prefWidth="41.0" text="First" />
+        			<TableColumn fx:id="lastNameColumn" prefWidth="48.0" text="Last" />
+        			<TableColumn fx:id="middleNameColumn" prefWidth="46.0" text="Middle" />
+        			<TableColumn fx:id="preferredNameColumn" prefWidth="56.0" text="Preferred" />
+        			<TableColumn fx:id="roleIdColumn" prefWidth="49.0" text="Role ID" />
+    			</columns>
+			</TableView>
          </children>
       </AnchorPane>
    </center>
