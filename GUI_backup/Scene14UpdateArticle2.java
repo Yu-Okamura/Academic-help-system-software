@@ -1,5 +1,7 @@
 package application;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
@@ -13,6 +15,7 @@ import javafx.scene.Node;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.util.Duration;
 
 import java.io.IOException;
 
@@ -86,6 +89,11 @@ public class Scene14UpdateArticle2 {
 
         // Simulate loading data from server (mock data for now)
         loadArticleData();
+        
+        // Print "article data is now displayed" 1 millisecond after initialization
+        Timeline timeline = new Timeline(new KeyFrame(Duration.millis(1), e -> displayArticle()));
+        timeline.setCycleCount(1);
+        timeline.play();
 
         // Add listener to validate input and enable submit button
         titleField.textProperty().addListener((observable, oldValue, newValue) -> validateForm());
@@ -95,6 +103,10 @@ public class Scene14UpdateArticle2 {
         groupIDsField.textProperty().addListener((observable, oldValue, newValue) -> validateForm());
         bodyField.textProperty().addListener((observable, oldValue, newValue) -> validateForm());
         levelChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> validateForm());
+    }
+    
+    private void displayArticle() {
+        System.out.println("article data is now displayed");
     }
 
     private void validateForm() {
@@ -112,13 +124,13 @@ public class Scene14UpdateArticle2 {
 
     private void loadArticleData() {
         // Example data loaded into fields (ur welcome)
-        titleField.setText("Loaded title");
+        titleField.setText("Example Article");
         levelChoiceBox.setValue("Beginner");
-        descriptionField.setText("Loaded description");
-        keywordsField.setText("Loaded keywords");
-        linksField.setText("Loaded links");
-        groupIDsField.setText("Loaded group ids"); // Dont forget to get rid of level ids (1-4) from here
-        bodyField.setText("Loaded body");
+        descriptionField.setText("This is an example article made for screencasting.");
+        keywordsField.setText("Example, CSE360, Phase2");
+        linksField.setText("https://canvas.asu.edu/courses/193728/assignments/5331995?return_to=https%3A%2F%2Fcanvas.asu.edu%2Fcalendar%23view_name%3Dmonth%26view_start%3D2024-10-30");
+        groupIDsField.setText("5"); // Dont forget to hide level ids (1-4) from here
+        bodyField.setText("During the last three development phases, the team must produce (and update if needed) the requirements, architecture, design, code, test cases, and demonstrations showing how the requirements flow gracefully through all the software development stages.  Unless special arrangements are made, all four phases of the application development must be written with a Graphical User Interface using JavaFX.");
     }
 
     @FXML

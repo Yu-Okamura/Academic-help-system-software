@@ -92,11 +92,11 @@ public class Scene14ListGroup {
     private ObservableList<Group> getGroups() {
         // Example data (replace this with server data fetch logic later)
         ObservableList<Group> groups = FXCollections.observableArrayList();
-        groups.add(new Group("Beginner", "1", "3"));
-        groups.add(new Group("Intermediate", "2", "10"));
-        groups.add(new Group("Advanced", "3", "7"));
-        groups.add(new Group("Expert", "4", "1"));
-        groups.add(new Group("Algorithm", "5", "7, 9"));
+        groups.add(new Group("Beginner", "1", "2, 3"));
+        groups.add(new Group("Intermediate", "2", "1"));
+        groups.add(new Group("Advanced", "3", ""));
+        groups.add(new Group("Expert", "4", ""));
+        groups.add(new Group("CSE360", "5", "2"));
         return groups;
     }
 
