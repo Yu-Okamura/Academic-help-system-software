@@ -111,9 +111,8 @@ public class Scene14UpdateArticle2 {
 
         submitButton.setDisable(!allFieldsFilled);
     }
-
+//Populates textboxes
     private void loadArticleData() {
-        // Example data loaded into fields (ur welcome)
     	Manager admin = new Manager();
     	admin.connect();
         titleField.setText(this.passedArticleData[1]);
@@ -124,9 +123,8 @@ public class Scene14UpdateArticle2 {
         groupIDsField.setText("Loaded group ids"); // Dont forget to get rid of level ids (1-4) from here
         bodyField.setText(this.passedArticleData[3]);
     }
-    
+    //Functions to initialize data from previous scene before this one is displayed
     public void initArticleData(String[] data) {
-    	//Stage stage = (Stage) this.getScene().getWindow();
     	this.passedArticleData = data;
     	System.out.println(data.length);
     	
