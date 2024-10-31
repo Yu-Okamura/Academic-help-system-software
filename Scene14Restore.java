@@ -14,6 +14,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class Scene14Restore {
 	
@@ -99,10 +100,26 @@ public class Scene14Restore {
     private void handleProceed(ActionEvent event) {
         String backupPath = backupPathField.getText().trim();
         String restoreOption = restoreOptionChoiceBox.getValue();
+        System.out.println(restoreOption);
 
         // Print the restore option and path
         System.out.println("Restore option selected: " + restoreOption);
         System.out.println("Backup path: " + backupPath);
+        
+        Manager admin = new Manager();
+        admin.connect();
+        boolean overwrite = false;
+        if (restoreOption.equals("Overwrite restore")) {
+        	overwrite = true;
+        } else {
+        	overwrite = false;
+        }
+        try {
+			admin.restore(backupPath, overwrite);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         // Switch to Scene14 (or previous scene)
         switchScene(event, "scene14.fxml");

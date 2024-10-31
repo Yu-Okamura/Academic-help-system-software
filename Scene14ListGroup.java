@@ -16,6 +16,10 @@ import javafx.scene.Scene;
 
 import java.io.IOException;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class Scene14ListGroup {
 	
 	@FXML
@@ -77,6 +81,9 @@ public class Scene14ListGroup {
 
     @FXML
     private Hyperlink signOutLink;
+    
+    private ObservableList<Group> groupData = FXCollections.observableArrayList();
+    
 
     @FXML
     public void initialize() {
@@ -86,7 +93,8 @@ public class Scene14ListGroup {
         articlesColumn.setCellValueFactory(new PropertyValueFactory<>("articleIds"));
 
         // Load example data into the table
-        groupTable.setItems(getGroups());
+        loadGroupData();
+        groupTable.setItems(this.groupData);
     }
 
     private ObservableList<Group> getGroups() {
@@ -112,6 +120,41 @@ public class Scene14ListGroup {
             stage.show();
         } catch (IOException e) {
             e.printStackTrace();
+        }
+    }
+    
+    private void loadGroupData() {
+    	Manager admin = new Manager();
+    	admin.connect();
+    	String[][] articlesArray = admin.getArticleArray();
+        Map<String, Integer> groupCountMap = new HashMap<>();
+
+
+        Map<String, String> groupLevelMap = new HashMap<>();
+        for (String[] article : articlesArray) {
+            String groupIds = article[2]; // Group_ids
+            String level = article[6];    // Level for each article
+
+            String[] groupIdsArray = groupIds.split(",");
+            for (String groupId : groupIdsArray) {
+                groupId = groupId.trim();
+                String groupKey = groupId + ":" + level; // Unique key combining groupId and level
+                groupCountMap.put(groupKey, groupCountMap.getOrDefault(groupKey, 0) + 1);
+                groupLevelMap.put(groupKey, level); // Store the level for each unique groupId
+            }
+        }
+
+
+        for (Map.Entry<String, Integer> entry : groupCountMap.entrySet()) {
+            String groupKey = entry.getKey();
+            String[] parts = groupKey.split(":");
+            String groupId = parts[0];
+            String level = groupLevelMap.get(groupKey); // Retrieve the level for this groupId
+
+            String articleIds = String.valueOf(entry.getValue()); // Count of articles as articleIds
+
+            Group group = new Group(level, groupId, articleIds);
+            groupData.add(group);
         }
     }
 

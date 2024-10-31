@@ -68,6 +68,8 @@ public class Scene14ListArticle {
 
     @FXML
     private Hyperlink signOutLink;
+    
+    private String groupID;
 
     @FXML
     public void initialize() {
@@ -84,7 +86,7 @@ public class Scene14ListArticle {
     @FXML
     private void handleProceed(ActionEvent event) {
         // Retrieve the group ID entered by the user
-        String groupID = groupIDField.getText().trim();
+        this.groupID = groupIDField.getText().trim();
 
         if (groupID.equals("0")) {
             System.out.println("Listing all articles");
@@ -101,6 +103,11 @@ public class Scene14ListArticle {
             // Load the FXML for the new scene
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
+            
+            if (fxmlFile.equals("scene14ListArticle2.fxml")) {
+            	Scene14ListArticle2 controller = (Scene14ListArticle2) loader.getController();
+            	controller.loadArticleData(Integer.valueOf(this.groupID));
+            }
 
             // Get the current stage (window) and set the new scene
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

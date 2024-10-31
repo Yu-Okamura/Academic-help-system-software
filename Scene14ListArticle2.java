@@ -83,15 +83,16 @@ public class Scene14ListArticle2 {
     private Hyperlink signOutLink;
 
     // Sample data for articles
-    private ObservableList<Article> articleData = FXCollections.observableArrayList(
-            new Article("Title1", "CSE", "E", "4, 8"),
-            new Article("Title2", "Example, CSE", "I", "2, 8, 10")
-    );
+//    private ObservableList<Article> articleData = FXCollections.observableArrayList(
+//            new Article("Title1", "CSE", "E", "4, 8"),
+//            new Article("Title2", "Example, CSE", "I", "2, 8, 10")
+//    );
+    private ObservableList<Article> articleData = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
         // Call the function that would read data from the server
-        loadArticleData();
+        //loadArticleData();
 
         // Set up the table columns
         titleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
@@ -100,13 +101,54 @@ public class Scene14ListArticle2 {
         groupIdsColumn.setCellValueFactory(new PropertyValueFactory<>("groupIds"));
 
         // Add sample data to the table
-        articleTable.setItems(articleData);
+        //articleTable.setItems(articleData);
     }
 
-    private void loadArticleData() {
+    public void loadArticleData(int groupID) {
         // Empty function for now (placeholder for server logic)
         // In the future, this would fetch data from a server or database
         System.out.println("Fetching articles from the server...");
+        Manager admin = new Manager();
+        admin.connect();
+        String[][] articleArray = admin.getArticleArray();
+        if (groupID == 0) {
+        	for(String[] articleDataArr : articleArray) {
+            	Article article = new Article(
+            			articleDataArr[1], // Title
+            			articleDataArr[2], // Keywords
+            			articleDataArr[5], // Level
+            			articleDataArr[2]  // Group_ids
+                    );
+                    
+                    articleData.add(article);
+            }
+        } else {
+        	for(String[] articleDataArr : articleArray) {
+        		String[] groupIdsArray = articleDataArr[2].split(",");
+        		for (String groupId : groupIdsArray) {
+                    groupId = groupId.trim();
+                    try {
+                    	int thisGroupId = Integer.valueOf(groupId);
+                    	System.out.println(thisGroupId);
+                    	if (thisGroupId == groupID) {
+                			Article article = new Article(
+                        			articleDataArr[1], // Title
+                        			articleDataArr[3], // Keywords
+                        			articleDataArr[6], // Level
+                        			articleDataArr[2]  // Group_ids
+                                );
+                                
+                                articleData.add(article);
+                		}
+                    } catch (NumberFormatException e) {
+                    	//System.out.println("Non-numeric id found, skipping...");
+                    }
+                }
+        		
+            }
+        }
+        articleTable.setItems(articleData);
+        
     }
 
     private void switchScene(ActionEvent event, String fxmlFile) {

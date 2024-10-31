@@ -12,6 +12,7 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 
 import java.io.IOException;
+import java.sql.SQLException;
 
 public class Scene14Backup {
 	
@@ -103,6 +104,15 @@ public class Scene14Backup {
 
             // Print the backup path
             System.out.println("Backup path: " + backupPath);
+            
+            Manager admin = new Manager();
+            admin.connect();
+            try {
+				admin.backup(backupPath, id);
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
             // Switch to Scene14 (or previous scene)
             switchScene(event, "scene14.fxml");

@@ -89,7 +89,9 @@ public class Scene14CreateGroup {
 
         // Print the group name to the console
         System.out.println("New group: " + groupName + " is being added. make sure to assign a group ID automatically by the server.");
-
+        Manager admin = new Manager();
+        admin.connect();
+        admin.createGroup(groupName);
         // Switch back to the main scene (scene14.fxml) after submission
         switchScene(event, "scene14.fxml");
     }

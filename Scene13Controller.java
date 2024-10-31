@@ -18,11 +18,13 @@ public class Scene13Controller {
     @FXML
     private ChoiceBox<Integer> generateInviteChoiceBox, editRoleChoiceBox;
     @FXML
-    private Hyperlink generateLink, resetLink, setRoleLink, deleteLink, listLink, editLink, signOutLink; //phase 2
+    private Hyperlink generateLink, resetLink, setRoleLink, deleteLink, listLink, signOutLink;
     @FXML
     private Text inviteCodeText, otpText;
     @FXML
     private TextField resetEmailField, editRoleEmailField, deleteEmailField, confirmDeleteField, unixTimeField;
+
+    private Manager admin = new Manager();
 
     @FXML
     public void initialize() {
@@ -35,6 +37,8 @@ public class Scene13Controller {
         resetLink.setDisable(true);
         setRoleLink.setDisable(true);
         deleteLink.setDisable(true);
+        
+        admin.connect();
 
         // Set listeners
         generateInviteChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> generateLink.setDisable(newVal == null));
@@ -52,34 +56,39 @@ public class Scene13Controller {
 
     @FXML
     private void handleGenerateInvite(ActionEvent event) {
-        inviteCodeText.setText("code: XYZ123"); // example
+         //example
+        int selectedRoleId = generateInviteChoiceBox.getValue();
+        String inviteCode = this.admin.getInviteCode(selectedRoleId);
+        inviteCodeText.setText(inviteCode);
+        
     }
 
     @FXML
     private void handleResetPassword(ActionEvent event) {
-        String unixTime = unixTimeField.getText().trim();
-        System.out.println("Unix Time: " + unixTime);
-        otpText.setText("OTP: 123456"); // example
+    	String password = admin.generateOTP(unixTimeField.getText());
+    	User userToChange = new User(resetEmailField.getText(), "", "", "");
+    	admin.setPassword(userToChange, password);
+        otpText.setText(password); //example
     }
 
     @FXML
     private void handleSetRole(ActionEvent event) {
-        System.out.println("User role updated");
+        System.out.println("User role updated"); 
+        User userToChange = new User(editRoleEmailField.getText(), "", "", "");
+        int idToChange = admin.getUserID(userToChange);
+        admin.changeRole(idToChange, editRoleChoiceBox.getValue());
     }
 
     @FXML
     private void handleDeleteUser(ActionEvent event) {
         confirmDeleteField.setVisible(true);
+        User userToChange = new User(deleteEmailField.getText(), "", "", "");
+        admin.deleteUserByID(userToChange);
     }
 
     @FXML
     private void handleListUsers(ActionEvent event) {
         System.out.println("Listed all users");
-    }
-    
-    @FXML //phase 2
-    private void handleEditArticles(ActionEvent event) { 
-    	switchScene(event, "scene14.fxml");
     }
 
     @FXML

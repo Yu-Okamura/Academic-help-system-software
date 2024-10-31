@@ -42,7 +42,7 @@ public class Scene2Controller {
 
     @FXML
     public void initialize() {
-        // Add listeners to validate inputs when text fields change
+        // Add listeners to validate inputs
         usernameField.textProperty().addListener((observable, oldValue, newValue) -> validateUsername());
         passwordField.textProperty().addListener((observable, oldValue, newValue) -> validatePassword());
         confirmPasswordField.textProperty().addListener((observable, oldValue, newValue) -> validateConfirmPassword());
@@ -51,52 +51,51 @@ public class Scene2Controller {
 
     @FXML
     private void handleSignUp(ActionEvent event) {
-        // Handle sign-up logic when the sign-up button is clicked
+        // Handle sign-up logic here
         System.out.println("Sign up button clicked!");
 
-        // Create Manager object to handle sign-up operations
+        //Create manager object to handle signup
         Manager admin = new Manager();
-        admin.connect(); // Connect to the database
+        admin.connect();
         
-        int numUsersBefore = admin.getUserCount(); // Get the user count before adding the new user
+        int numUsersBefore = admin.getUserCount();
 		
-        System.out.print("Before adding user: ");
-        System.out.println(numUsersBefore);
+		System.out.print("Before adding user: ");
+		System.out.println(numUsersBefore);
 		
-        // Validate the invite code and check its correctness
-        int inviteValidation = admin.validateInviteCode(inviteCodeField.getText());
+		//Easy check for invite code & role correctness
+		int inviteValidation = admin.validateInviteCode(inviteCodeField.getText());
         boolean inviteValid = inviteValidation != -1;
         
-        // Create a new User object with default values
-        User newUser = new User(usernameField.getText(), passwordField.getText(), "DEFAULT", "DEFAULT");
-        boolean usernameUnique = (admin.getUserID(newUser)) == -1; // Check if the username is unique
+    	User newUser = new User(usernameField.getText(), passwordField.getText(), "DEFAULT", "DEFAULT");
+    	boolean usernameUnique = (admin.getUserID(newUser)) == -1;
     	
-        // Check if the username is unique and the invite code is valid before creating the user
-        if (usernameUnique) {
-            if (inviteValid) {
-                admin.createUser(newUser, inviteCodeField.getText()); // Create the user in the database
-                handleLoginLink(event); // Navigate to the login screen
-            } else {
-                handleInvalidCode(event); // Handle invalid invite code
-            }
-        } else {
-            handleNonUniqueUser(event); // Handle non-unique username
-        }
     	
-        System.out.println(admin.getUserCount()); // Print the user count after adding the user
+    	if (usernameUnique) {
+    		if (inviteValid) {
+    			admin.createUser(newUser, inviteCodeField.getText());
+    			handleLoginLink(event);
+    		} else {
+    			handleInvalidCode(event);
+    		}
+    	} else {
+    		handleNonUniqueUser(event);
+    	}
+    	
+    	System.out.println(admin.getUserCount());
     }
 
     @FXML
     private void handleLoginLink(ActionEvent event) {
         try {
-            // Load the FXML for Scene 1 (Login Screen)
+            // Load the FXML for Scene 1
             FXMLLoader loader = new FXMLLoader(getClass().getResource("scene1.fxml"));
             Parent root = loader.load();
 
             // Get the current stage (window) and set the new scene
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 600, 400)); // Set scene dimensions
-            stage.show(); // Show the updated stage
+            stage.setScene(new Scene(root, 600, 400));
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -104,14 +103,14 @@ public class Scene2Controller {
     
     private void handleNonUniqueUser(ActionEvent event) {
         try {
-            // Load the FXML for Scene 5 (Username Not Unique Screen)
+            // Load the FXML for Scene 1
             FXMLLoader loader = new FXMLLoader(getClass().getResource("scene5.fxml"));
             Parent root = loader.load();
 
             // Get the current stage (window) and set the new scene
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 600, 400)); // Set scene dimensions
-            stage.show(); // Show the updated stage
+            stage.setScene(new Scene(root, 600, 400));
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -119,20 +118,19 @@ public class Scene2Controller {
     
     private void handleInvalidCode(ActionEvent event) {
         try {
-            // Load the FXML for Scene 3 (Invalid Code Screen)
+            // Load the FXML for Scene 1
             FXMLLoader loader = new FXMLLoader(getClass().getResource("scene3.fxml"));
             Parent root = loader.load();
 
             // Get the current stage (window) and set the new scene
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 600, 400)); // Set scene dimensions
-            stage.show(); // Show the updated stage
+            stage.setScene(new Scene(root, 600, 400));
+            stage.show();
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
-    // Validates the username input field
     private void validateUsername() {
         String username = usernameField.getText();
         if (username.isEmpty()) {
@@ -148,10 +146,9 @@ public class Scene2Controller {
         } else {
             usernameErrorText.setText("");
         }
-        validateForm(); // Validate the form after updating the username
+        validateForm();
     }
 
-    // Validates the password input field
     private void validatePassword() {
         String password = passwordField.getText();
         if (password.isEmpty()) {
@@ -169,10 +166,9 @@ public class Scene2Controller {
         } else {
             passwordErrorText.setText("");
         }
-        validateForm(); // Validate the form after updating the password
+        validateForm();
     }
 
-    // Validates the confirm password field to ensure it matches the password
     private void validateConfirmPassword() {
         String password = passwordField.getText();
         String confirmPassword = confirmPasswordField.getText();
@@ -183,10 +179,9 @@ public class Scene2Controller {
         } else {
             confirmPasswordErrorText.setText("");
         }
-        validateForm(); // Validate the form after updating the confirm password field
+        validateForm();
     }
 
-    // Validates the entire form to enable or disable the sign-up button
     private void validateForm() {
         boolean isUsernameValid = usernameErrorText.getText().isEmpty();
         boolean isPasswordValid = passwordErrorText.getText().isEmpty();
@@ -196,7 +191,6 @@ public class Scene2Controller {
                                     !passwordField.getText().trim().isEmpty() &&
                                     !confirmPasswordField.getText().trim().isEmpty();
 
-        // Enable the sign-up button if all fields are valid and filled
         signUpButton.setDisable(!(isUsernameValid && isPasswordValid && isConfirmPasswordValid && isAllFieldsFilled));
     }
 }

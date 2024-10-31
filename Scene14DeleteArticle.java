@@ -89,6 +89,17 @@ public class Scene14DeleteArticle {
 
         // Print the article IDs to the console
         System.out.println("Article IDs: " + articleIDs + " are being deleted.");
+        Manager admin = new Manager();
+        admin.connect();
+        for (String id : articleIDs.split(",")) {
+            String articleID = id.trim(); // Trim to remove any extra spaces
+            try {
+				admin.delete_article(Integer.parseInt(articleID));
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} // Call delete_article for each ID
+        }
 
         // Switch back to the main scene (scene14.fxml) after deletion
         switchScene(event, "scene14.fxml");

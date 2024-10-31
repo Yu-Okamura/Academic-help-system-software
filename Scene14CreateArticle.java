@@ -148,6 +148,15 @@ public class Scene14CreateArticle {
         System.out.println("Links: " + links);
         System.out.println("Group IDs: " + updatedGroupIDs);
         System.out.println("Body: " + body);
+        
+        Manager admin = new Manager();
+        admin.connect();
+        try {
+			admin.create_article(title, description, body, updatedGroupIDs, "REFERENCES", keywords, levelGroupId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         // After printing the info, switch back to scene14.fxml
         switchScene(event, "scene14.fxml");

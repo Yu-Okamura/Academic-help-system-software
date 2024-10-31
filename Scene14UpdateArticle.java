@@ -68,6 +68,9 @@ public class Scene14UpdateArticle {
 
     @FXML
     private Hyperlink signOutLink;
+    
+    private String[] dataToPass;
+    private String articleID;
 
     @FXML
     public void initialize() {
@@ -84,10 +87,18 @@ public class Scene14UpdateArticle {
     @FXML
     private void handleProceed(ActionEvent event) {
         // Retrieve the article ID entered by the user
-        String articleID = articleIDField.getText().trim();
+        this.articleID = articleIDField.getText().trim();
 
         // For now, simply print the article ID to the console
         System.out.println("Selected Article ID: " + articleID + " is being updated.");
+        
+        Manager admin = new Manager();
+        admin.connect();
+        this.dataToPass = admin.getArticleByID(Long.parseLong(articleID));
+        
+        Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+        //stage.setUserData(admin.getArticleByID(Long.parseLong(articleID)));
+        //System.out.println(admin.getArticleByID(Long.parseLong(articleID))[2]);
 
         // Switch to scene14UpdateArticle2.fxml
         switchScene(event, "scene14UpdateArticle2.fxml");
@@ -98,6 +109,11 @@ public class Scene14UpdateArticle {
             // Load the new FXML file
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
+            if (fxmlFile.equals("scene14UpdateArticle2.fxml")){
+            	 Scene14UpdateArticle2 controller = (Scene14UpdateArticle2) loader.getController();
+                 controller.initArticleData(this.dataToPass);
+                 controller.setArticleID(this.articleID);
+            }
 
             // Get the current stage and set the new scene
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();

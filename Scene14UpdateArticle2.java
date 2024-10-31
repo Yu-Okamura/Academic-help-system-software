@@ -17,7 +17,7 @@ import javafx.scene.Scene;
 import java.io.IOException;
 
 public class Scene14UpdateArticle2 {
-	
+	public String[] passedArticleData = new String[5];
 	@FXML
     private void handleSignOut(ActionEvent event) {
         switchScene(event, "scene1.fxml");
@@ -77,6 +77,8 @@ public class Scene14UpdateArticle2 {
 
     @FXML
     private Hyperlink signOutLink;
+    
+    private long passedID;
 
     @FXML
     public void initialize() {
@@ -85,7 +87,7 @@ public class Scene14UpdateArticle2 {
         levelChoiceBox.setValue("Select");
 
         // Simulate loading data from server (mock data for now)
-        loadArticleData();
+        //loadArticleData();
 
         // Add listener to validate input and enable submit button
         titleField.textProperty().addListener((observable, oldValue, newValue) -> validateForm());
@@ -112,13 +114,27 @@ public class Scene14UpdateArticle2 {
 
     private void loadArticleData() {
         // Example data loaded into fields (ur welcome)
-        titleField.setText("Loaded title");
-        levelChoiceBox.setValue("Beginner");
+    	Manager admin = new Manager();
+    	admin.connect();
+        titleField.setText(this.passedArticleData[1]);
+        levelChoiceBox.setValue(this.passedArticleData[5]);
         descriptionField.setText("Loaded description");
-        keywordsField.setText("Loaded keywords");
+        keywordsField.setText(this.passedArticleData[2]);
         linksField.setText("Loaded links");
         groupIDsField.setText("Loaded group ids"); // Dont forget to get rid of level ids (1-4) from here
-        bodyField.setText("Loaded body");
+        bodyField.setText(this.passedArticleData[3]);
+    }
+    
+    public void initArticleData(String[] data) {
+    	//Stage stage = (Stage) this.getScene().getWindow();
+    	this.passedArticleData = data;
+    	System.out.println(data.length);
+    	
+    	loadArticleData();
+    }
+    
+    public void setArticleID(String id) {
+    	this.passedID = Long.parseLong(id);
     }
 
     @FXML
@@ -162,6 +178,15 @@ public class Scene14UpdateArticle2 {
         System.out.println("Links: " + links);
         System.out.println("Group IDs: " + updatedGroupIDs);
         System.out.println("Body: " + body);
+        
+        Manager admin = new Manager();
+        admin.connect();
+        try {
+			admin.update_article(this.passedID, title, description, body, updatedGroupIDs, "REFERENCE", keywords, levelGroupId);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 
         // After printing the info, switch back to scene14.fxml
         switchScene(event, "scene14.fxml");
