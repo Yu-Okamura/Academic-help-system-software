@@ -127,6 +127,7 @@ public class Scene14ListGroup {
     	Manager admin = new Manager();
     	admin.connect();
     	String[][] articlesArray = admin.getArticleArray();
+	//We use a hashmap to total articles for each group
         Map<String, Integer> groupCountMap = new HashMap<>();
 
 
