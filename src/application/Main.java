@@ -6,6 +6,8 @@ import javafx.scene.Scene;
 import javafx.scene.Parent;
 import javafx.fxml.FXMLLoader;
 
+import java.util.*;
+
 public class Main extends Application {
     private static Stage primaryStage; // Primary window for the application
 
@@ -38,18 +40,16 @@ public class Main extends Application {
 		
 		//admin.createDatabaseAndTables();
 		
-		User newUser = new User("mwolf", "Abc123!g", "Max Wolf", "mwolf2@cognify.com");				
-	
-		admin.createUser(newUser, "1234");
+//		User newUser = new User("mwolf", "Abc123!g", "Max Wolf", "mwolf2@cognify.com");				
+//	
+//		admin.createUser(newUser, "1234");
 		
-		admin.addArticleToGroup(1, 5);
+		admin.addArticleToGroup(1, 1);
+		ArrayList<String[]> articles = admin.filterArticlesByGroup(1);
 		
-		admin.addUserToGroup(1, 5, 1, true);
-		
-		boolean canModify = admin.canUserModifyArticle(1, 1);
-		
-		System.out.println("CANUSER modify??? " + canModify);
-		
+		for(String []article : articles) {
+			System.out.println("HE" +article[3]);
+		}
 		//admin.createGroup("SECRET GROUP");
 		
 		//admin.addUserToGroup(5, 5, 3, true);

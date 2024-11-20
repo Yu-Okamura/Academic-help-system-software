@@ -31,6 +31,10 @@ import java.util.Base64;
 
 import application.User;
 
+import java.util.Base64;
+
+import application.EncryptionHelper;
+import application.EncryptionUtils;
 
 import org.json.JSONArray;
 
@@ -127,6 +131,7 @@ public class Manager {
     	String table4 = "create table group_table(EntryID BIGINT AUTO_INCREMENT PRIMARY KEY, ID bigint DEFAULT NULL, Name varchar(255), ArticleID bigint NULL);";
     	String table5 = "create table user_roles(user_id int, role_id int, PRIMARY KEY(user_id, role_id));";
     	String table6 = "create table user_groups(user_id INT, group_id BIGINT, role_id INT, can_decrypt BOOL, PRIMARY KEY(user_id, group_id));";
+    	
     	//starts group increment at 5; 1-4 is Beginner-Expert
     	String[] inviteCodes = {"CODE001", "CODE002", "CODE003", "CODE004", "CODE005", "CODE007", "CODE008", "CODE009", "CODE010"};
     	try(Connection connection = this.connection; Statement statement = connection.createStatement()){
@@ -417,32 +422,32 @@ public class Manager {
 	public String[][] searchArticles(String searchTerm) {
 	    ArrayList<String[]> matchingArticles = new ArrayList<>();
 	    String[] terms = searchTerm.split(" "); // Split search terms by spaces
-	
+
 	    // Build SQL query dynamically for multiple terms
-	    StringBuilder queryBuilder = new StringBuilder("SELECT ID, Title, Keywords, Body, Reference_Articles, Level FROM articles WHERE ");
+	    StringBuilder queryBuilder = new StringBuilder("SELECT ID, Title, Keywords, Body, Reference_Articles, Discription, Level FROM articles WHERE ");
 	    for (int i = 0; i < terms.length; i++) {
 	        if (i > 0) queryBuilder.append(" AND ");
-	        queryBuilder.append("(LOWER(Title) LIKE ? OR LOWER(Authors) LIKE ? OR LOWER(Keywords) LIKE ? OR LOWER(Body) LIKE ?)");
+	        queryBuilder.append("(LOWER(Title) LIKE ? OR LOWER(Keywords) LIKE ? OR LOWER(Body) LIKE ? OR LOWER(Reference_Articles) LIKE ? OR LOWER(Discription) LIKE ? OR LOWER(Level) LIKE ?)");
 	    }
-	
+
 	    try (PreparedStatement statement = connection.prepareStatement(queryBuilder.toString())) {
 	        int paramIndex = 1;
 	        for (String term : terms) {
 	            String searchPattern = "%" + term.toLowerCase() + "%"; // Create search pattern
-	            for (int j = 0; j < 4; j++) {
+	            for (int j = 0; j < 6; j++) { // Update loop count to 6 for each column
 	                statement.setString(paramIndex++, searchPattern);
 	            }
 	        }
-	
+
 	        try (ResultSet rs = statement.executeQuery()) {
 	            while (rs.next()) {
 	                String[] article = new String[7]; // Array to hold matched article data
 	                article[0] = rs.getString("ID");
 	                article[1] = rs.getString("Title");
-	                article[2] = rs.getString("Authors");
-	                article[3] = rs.getString("Keywords");
-	                article[4] = rs.getString("Body");
-	                article[5] = rs.getString("Reference_Articles");
+	                article[2] = rs.getString("Keywords");
+	                article[3] = rs.getString("Body");
+	                article[4] = rs.getString("Reference_Articles");
+	                article[5] = rs.getString("Discription");
 	                article[6] = rs.getString("Level");
 	                matchingArticles.add(article); // Add to results list
 	            }
@@ -451,9 +456,55 @@ public class Manager {
 	        System.out.println("Error searching articles: " + e.getMessage());
 	        e.printStackTrace();
 	    }
-	
+
 	    return matchingArticles.toArray(new String[0][]); // Return matched articles as array
 	}
+	
+	ArrayList<String[]> filterArticlesByGroup(int group_id) {
+		ArrayList<String[]> articles = new ArrayList<>();
+		String query = "SELECT * FROM group_table WHERE ID = ? AND ArticleID IS NOT NULL";
+		
+		ArrayList<Integer> article_ids = new ArrayList<>();
+		
+		try(PreparedStatement statement = connection.prepareStatement(query)){
+			statement.setInt(1, group_id);
+			
+			try(ResultSet result = statement.executeQuery()){
+				while(result.next()) {
+					article_ids.add(result.getInt("ArticleID"));
+				}
+			}
+			
+			
+		} catch(SQLException e) {
+			System.out.println("Error filtering articles by group: " + e.getMessage());
+		}
+		
+	    String query2 = "SELECT ID, Title, Group_ids, Keywords, Body, Reference_Articles, Level FROM articles WHERE ID = ?";
+	    for (int article_id : article_ids) {
+	        try (PreparedStatement stmt = connection.prepareStatement(query2)) {
+	            stmt.setInt(1, article_id);
+	            try (ResultSet rs = stmt.executeQuery()) {
+	                while (rs.next()) {
+	                    String[] article = new String[7];
+	                    article[0] = String.valueOf(rs.getLong("ID"));
+	                    article[1] = rs.getString("Title");
+	                    article[2] = rs.getString("Group_ids");
+	                    article[3] = rs.getString("Keywords");
+	                    article[4] = rs.getString("Body");
+	                    article[5] = rs.getString("Reference_Articles");
+	                    article[6] = rs.getString("Level");
+	                    articles.add(article);
+	                }
+	            }
+	        } catch (SQLException e) {
+	            System.out.println("Error fetching article details: " + e.getMessage());
+	        }
+	    }
+
+	    return articles;
+	}
+
 	
 	public void update_article(long identifier, String title, String discription, String body, String group_ids, String ref, String keywords, String level) throws Exception {
 	    String update_article = "UPDATE articles SET Title = ?, Discription = ?, Body = ?, Group_ids = ?, Reference_Articles = ?, Keywords = ?, Level = ? WHERE ID = ?";
@@ -1078,6 +1129,5 @@ public class Manager {
 	public String getInviteCode(int index) {
 	    return this.inviteCodes[index]; // Return invite code at specified index
 	}
-
 	
 }
