@@ -129,6 +129,7 @@ public class Manager {
     	String table3 = "create table articles(ID bigint AUTO_INCREMENT primary key, Title varchar(255),Discription text, Body text, Group_ids varchar(255), Reference_Articles varchar(255), Keywords varchar(255), Level varchar(30));";
     	String table4 = "create table group_table(EntryID BIGINT AUTO_INCREMENT PRIMARY KEY, ID bigint DEFAULT NULL, Name varchar(255), ArticleID bigint NULL);";
     	String table5 = "create table user_roles(user_id int, role_id int, PRIMARY KEY(user_id, role_id));";
+	String table6 = "create table user_groups(user_id INT, group_id BIGINT, role_id INT, can_decrypt BOOL, PRIMARY KEY(user_id, group_id));";
     	//starts group increment at 5; 1-4 is Beginner-Expert
     	String[] inviteCodes = {"CODE001", "CODE002", "CODE003", "CODE004", "CODE005", "CODE007", "CODE008", "CODE009", "CODE010"};
     	try(Connection connection = this.connection; Statement statement = connection.createStatement()){
@@ -1077,7 +1078,123 @@ public class Manager {
    			return articles;
    			
    		}
-   
+
+		public void addUserToGroup(int user_id, long group_id, int role_id, boolean can_decrypt){
+			//if first instructor in group
+			ArrayList<Integer> roles = getRoleList(user_id);
+			
+			if(getUsersByRoleInGroup(group_id, 3).size() == 0 && roles.contains(2)) {
+				role_id = 1;
+				can_decrypt = true;
+			}
+			String query = "INSERT INTO user_groups(user_id, group_id, role_id, can_decrypt) VALUES (?, ?, ?, ?)";
+			
+			try(PreparedStatement statementInsert = connection.prepareStatement(query)) {
+				statementInsert.setInt(1, user_id);
+				statementInsert.setLong(2, group_id);
+				statementInsert.setInt(3, role_id);
+				statementInsert.setBoolean(4, can_decrypt);
+				
+				statementInsert.executeUpdate();
+				System.out.println("User ID: " + user_id + " added to group ID: " + group_id);
+				
+			} catch (SQLException e){
+				System.out.println("Error adding user to group: " + e.getMessage());
+			}
+		}
+		
+		public ArrayList<Integer> getUsersByRoleInGroup(long group_id, int role_id){
+			ArrayList<Integer> user_ids = new ArrayList<>();
+			String query;
+			if(role_id == 1) {
+				query = "SELECT user_id FROM user_groups WHERE group_id = ? AND role_id = ?";
+				
+				try(PreparedStatement statement = connection.prepareStatement(query)){
+					statement.setLong(1, group_id);
+					statement.setInt(2, role_id);
+					
+			        try (ResultSet result = statement.executeQuery()) {
+			            while (result.next()) {
+			                user_ids.add(result.getInt("user_id"));
+			            }
+			        }
+					
+				} catch(SQLException e) {
+					System.out.println("Error getting users from group: " + e.getMessage());
+				}
+			}
+			return user_ids;
+		}
+	
+	
+	
+	//this one below is for access control to tick the box**
+	
+		public boolean validateUserGroup(int user_id, int group_id) {
+			//assumee user is not in group
+			boolean in_group = false;
+			
+			String query = "SELECT  * FROM user_groups WHERE user_id = ? AND group_id = ?";
+			
+			try(PreparedStatement statementSelect = connection.prepareStatement(query)){
+				statementSelect.setInt(1, user_id);
+				statementSelect.setInt(2, group_id);
+				
+				try(ResultSet resultSelect = statementSelect.executeQuery()){
+					in_group = resultSelect.next();
+				}
+			} catch(SQLException e) {
+				System.out.println("Error verifying user group: " + e.getMessage());
+			}
+			
+			return in_group;
+		}
+	   	public boolean canUserModifyArticle(int user_id, int article_id) {
+		        String article_groups_query = "SELECT ID FROM group_table WHERE ArticleID = ?";
+		        ArrayList <Integer> article_groups = new ArrayList<>();
+		
+		        try(PreparedStatement statement = connection.prepareStatement(article_groups_query)){
+		            statement.setInt(1, article_id);
+		            ResultSet resultSet = statement.executeQuery();
+		
+		            while(resultSet.next()) {
+		                article_groups.add(resultSet.getInt("ID"));
+		            }
+		        } catch(SQLException e) {
+		            System.out.println("Error getting groups that can modify article");
+		        }
+		
+		        for(int group_id : article_groups) {
+		
+		            if(validateUserGroup(user_id, group_id) == 1) {
+		                return true;
+		            }
+		        }
+		
+		        return false;
+		    }
+		public int validateUserGroup(int user_id, int group_id) {
+		        //assumee user is not in group
+		        int in_group = -1;
+		
+		        String query = "SELECT * FROM user_groups WHERE user_id = ? AND group_id = ?";
+		
+		        try(PreparedStatement statementSelect = connection.prepareStatement(query)){
+		            statementSelect.setInt(1, user_id);
+		            statementSelect.setInt(2, group_id);
+		
+		            try(ResultSet resultSet = statementSelect.executeQuery()){
+		                if(resultSet.next()) {
+		                    in_group = resultSet.getInt("role_id");
+		                }
+		            }
+		        } catch(SQLException e) {
+		            System.out.println("Error verifying user group: " + e.getMessage());
+		        }
+		
+		        return in_group;
+		    }
+
 
 	
 }
