@@ -78,6 +78,15 @@ public class Scene14ListGroup {
 
     @FXML
     private TableColumn<Group, String> articlesColumn;
+    
+    @FXML
+    private TableColumn<Group, String> adminColumn;
+    
+    @FXML
+    private TableColumn<Group, String> instructorColumn;
+    
+    @FXML
+    private TableColumn<Group, String> studentColumn;
 
     @FXML
     private Hyperlink signOutLink;
@@ -91,6 +100,9 @@ public class Scene14ListGroup {
         nameColumn.setCellValueFactory(new PropertyValueFactory<>("name"));
         idColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         articlesColumn.setCellValueFactory(new PropertyValueFactory<>("articleIds"));
+        adminColumn.setCellValueFactory(new PropertyValueFactory<>("adminIds"));
+        instructorColumn.setCellValueFactory(new PropertyValueFactory<>("instructorIds"));
+        studentColumn.setCellValueFactory(new PropertyValueFactory<>("studentIds"));
 
         // Load example data into the table
         loadGroupData();
@@ -99,12 +111,11 @@ public class Scene14ListGroup {
 
     private ObservableList<Group> getGroups() {
         // Example data (replace this with server data fetch logic later)
-        ObservableList<Group> groups = FXCollections.observableArrayList();
-        groups.add(new Group("Beginner", "1", "3"));
-        groups.add(new Group("Intermediate", "2", "10"));
-        groups.add(new Group("Advanced", "3", "7"));
-        groups.add(new Group("Expert", "4", "1"));
-        groups.add(new Group("Algorithm", "5", "7, 9"));
+        groups.add(new Group("Beginner", "1", "2, 3", "1, 2", "1, 2, 3", "5, 6"));
+        groups.add(new Group("Intermediate", "2", "1", "4", "4", "7, 8"));
+        groups.add(new Group("Advanced", "3", "4, 5", "2", "2, 3", "6, 9"));
+        groups.add(new Group("Expert", "4", "", "", "", ""));
+        groups.add(new Group("CSE360", "5", "", "", "", ""));
         return groups;
     }
 
@@ -161,14 +172,20 @@ public class Scene14ListGroup {
 
     // Helper class to represent a group
     public static class Group {
-        private String name;
-        private String id;
-        private String articleIds;
+        private final String name;
+        private final String id;
+        private final String articleIds;
+        private final String adminIds;
+        private final String instructorIds;
+        private final String studentIds;
 
-        public Group(String name, String id, String articleIds) {
+        public Group(String name, String id, String articleIds, String adminIds, String instructorIds, String studentIds) {
             this.name = name;
             this.id = id;
             this.articleIds = articleIds;
+            this.adminIds = adminIds;
+            this.instructorIds = instructorIds;
+            this.studentIds = studentIds;
         }
 
         public String getName() {
@@ -181,6 +198,18 @@ public class Scene14ListGroup {
 
         public String getArticleIds() {
             return articleIds;
+        }
+
+        public String getAdminIds() {
+            return adminIds;
+        }
+
+        public String getInstructorIds() {
+            return instructorIds;
+        }
+
+        public String getStudentIds() {
+            return studentIds;
         }
     }
 }
