@@ -36,6 +36,9 @@ import org.json.JSONArray;
 
 import application.User;
 
+import application.EncryptionHelper;
+import application.EncryptionUtils;
+
 public class Manager {
 	
     static String url = "jdbc:mysql://localhost:3306/CSE360";
@@ -885,6 +888,196 @@ public class Manager {
 	public String getInviteCode(int index) {
 	    return this.inviteCodes[index]; // Return invite code at specified index
 	}
+	public void create_articleENC(String title, String discription, String body, String group_ids, String ref, String keywords, String level) throws Exception {
+	//encrypting
+			byte[] iv = EncryptionUtils.getInitializationVector(title.toCharArray());
+			String etitle = Base64.getEncoder().encodeToString(
+					encryptionHelper.encrypt(title.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
+			);	
+			String ediscription = Base64.getEncoder().encodeToString(
+					encryptionHelper.encrypt(discription.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
+			);	
+			String ebody = Base64.getEncoder().encodeToString(
+					encryptionHelper.encrypt(body.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
+			);	
+			String egroup_ids = Base64.getEncoder().encodeToString(
+					encryptionHelper.encrypt(group_ids.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
+			);	
+			String eref = Base64.getEncoder().encodeToString(
+					encryptionHelper.encrypt(ref.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
+			);	
+			String ekeywords = Base64.getEncoder().encodeToString(
+					encryptionHelper.encrypt(keywords.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
+			);	
+			String elevel = Base64.getEncoder().encodeToString(
+					encryptionHelper.encrypt(level.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
+			);	
+			String ivE = Base64.getEncoder().encodeToString(iv);
+		
+		String insertArticle = "INSERT INTO articles (Title ,Discription , Body , Group_ids , Reference_Articles , Keywords , Level , IV ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+		try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) {
+			pstmt.setString(1, etitle);
+			pstmt.setString(2, ediscription);
+			pstmt.setString(3, ebody);
+			pstmt.setString(4, egroup_ids);
+			pstmt.setString(5, eref);
+			pstmt.setString(6, ekeywords);
+			pstmt.setString(7, elevel);
+			pstmt.setString(8, ivE);
+			pstmt.executeUpdate();
+			System.out.println("Article created successfully" );
+		}catch(SQLException e) {
+			System.out.println("Error Restoring" +e.getMessage());
+		}
+	}
+   public boolean delete_article(int ID) throws Exception {	
+	
+		String query = "DELETE FROM articles WHERE ID = ? ";
+	
+		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+			pstmt.setInt(1, ID);
+			
+			
+			int row = pstmt.executeUpdate();
+			return row >0 ;
+			
+	  }
+		catch(SQLException e) {
+			System.out.println("Error Restoring" +e.getMessage());
+			return false;
+		}
+	}
+   public void listArticlesDEC() throws Exception{
+		String sql = "SELECT * FROM articles"; 
+		try(Statement stmt = connection.createStatement();
+		ResultSet rs = stmt.executeQuery(sql)){ 
+
+		while(rs.next()) { 
+			
+			int id = rs.getInt("ID");
+			String  title = rs.getString("Title"); 
+			String dis = rs.getString("Discription");  
+			String body = rs.getString("Body"); 
+			String  gid = rs.getString("Group_ids"); 
+			String ref = rs.getString("Reference_Articles");  
+			String keywords = rs.getString("Keywords");
+			String level = rs.getString("Level");
+			String Encode = rs.getString("IV");
+			
+			byte [] iv = Base64.getDecoder().decode(Encode);
+			
+			char[] dtitle = EncryptionUtils.toCharArray(
+					encryptionHelper.decrypt(
+							Base64.getDecoder().decode(
+									title
+							), 
+							iv
+					)	
+			);
+			char[] ddis = EncryptionUtils.toCharArray(
+					encryptionHelper.decrypt(
+							Base64.getDecoder().decode(
+									dis
+							), 
+							iv
+					)	
+			);
+			char[] dbody = EncryptionUtils.toCharArray(
+					encryptionHelper.decrypt(
+							Base64.getDecoder().decode(
+									body
+							), 
+							iv
+					)	
+			);
+			char[] dgid = EncryptionUtils.toCharArray(
+					encryptionHelper.decrypt(
+							Base64.getDecoder().decode(
+									gid
+							), 
+							iv
+					)	
+			);
+			char[] dref = EncryptionUtils.toCharArray(
+					encryptionHelper.decrypt(
+							Base64.getDecoder().decode(
+									ref
+							), 
+							iv
+					)	
+			);
+			char[] dkeywords = EncryptionUtils.toCharArray(
+					encryptionHelper.decrypt(
+							Base64.getDecoder().decode(
+									keywords
+							), 
+							iv
+					)	
+			);
+			char[] dlevel = EncryptionUtils.toCharArray(
+					encryptionHelper.decrypt(
+							Base64.getDecoder().decode(
+									level
+							), 
+							iv
+					)	
+			);
+			
+
+			 
+			System.out.println("ID: " + id); 
+			System.out.println(", Title: " + new String(dtitle)); 
+			System.out.println(", Discription: " + new String(ddis)); 
+			System.out.println(", Body: " + new String(dbody)); 
+			System.out.println(", Group_ids: " + new String (dgid)); 
+			System.out.println(", Reference_Articles: " + new String(dref));
+			System.out.println(", Keywords: " + new String(dkeywords)); 
+			System.out.println(", level: " + new String(dlevel)); 
+		}
+		}
+			
+   }
+   
+   		public List<String[]> getArticlesByGroup(String group) throws SQLException{
+   			List<String[]> articles = new ArrayList<>();
+   			String query;
+   			if (group != null && !group.equalsIgnoreCase("all")) {
+   				query = "SELECT ID, Title, Keywords, Body, Reference_Articles, Level FROM articles WHERE Level =?";
+   			}else {
+   				query = "SELECT ID, Title, Keywords, Body, Reference_Articles, Level FROM articles ";
+   			}
+   			
+   			try (PreparedStatement statement = connection.prepareStatement(query)){
+   				if (group != null && !group.equalsIgnoreCase("all")) {
+   					statement.setString(1,  group);
+   				}
+   				
+   				try (ResultSet rs = statement.executeQuery()){
+   					while (rs.next()) {
+   						String[] article = new String[6];
+   						article[0] = String.valueOf(rs.getLong("ID"));
+   						article[1] = rs.getString("Title");
+   						article[2] = rs.getString("Keywords");
+   						article[3] = rs.getString("Body");
+   						article[4] = rs.getString("Reference_Articles");
+   						article[5] = rs.getString("Level");
+   						articles.add(article);
+   						
+   					}
+   					
+   					if (articles.isEmpty()) {
+   						System.out.println("No articles found for the specified group.");
+   					}
+   				}
+   			}catch (SQLException e) {
+   				System.out.println("Error retrieving articles: "+ e.getMessage());
+   				e.printStackTrace();
+   			}
+   			
+   			return articles;
+   			
+   		}
+   
 
 	
 }
