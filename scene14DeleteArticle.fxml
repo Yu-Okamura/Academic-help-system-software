@@ -42,7 +42,7 @@
                 </font>
              </Hyperlink>
              <Text fill="WHITE" layoutX="37.0" layoutY="100.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter article ID(s) to delete" wrappingWidth="148.0" />
-             <TextField fx:id="articleIDsField" layoutX="37.0" layoutY="118.0" prefHeight="25.0" prefWidth="249.0" />
+             <TextField fx:id="articleIDsField" layoutX="37.0" layoutY="108.0" prefHeight="25.0" prefWidth="249.0" />
              <Button fx:id="submitButton" disable="true" layoutX="87.0" layoutY="164.0" mnemonicParsing="false" onAction="#handleSubmit" prefHeight="27.0" prefWidth="151.0" style="-fx-background-color: #ff0000;" text="Delete" />
              <Text fill="WHITE" layoutX="37.0" layoutY="150.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(separate with commas)" wrappingWidth="156.0" />
          </children>
