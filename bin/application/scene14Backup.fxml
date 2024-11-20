@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Scene14Backup">
+   <right>
+      <AnchorPane prefHeight="360.0" prefWidth="277.0" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
+         <children>
+            <Hyperlink fx:id="signOutLink" layoutX="229.0" layoutY="1.0" onAction="#handleSignOut" style="-fx-background-color: transparent;" text="Sign out" textFill="#00ffc9">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Hyperlink>
+            <Text fill="#00ffc9" layoutX="73.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit help articles">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Hyperlink fx:id="createArticleLink" layoutX="84.0" layoutY="95.0" onAction="#handleCreateArticle" style="-fx-background-color: transparent;" text="Create a new article" textFill="#00ffc9" />
+            <Hyperlink fx:id="updateArticleLink" layoutX="90.0" layoutY="120.0" onAction="#handleUpdateArticle" style="-fx-background-color: transparent;" text="Update an article" textFill="#00ffc9" />
+            <Hyperlink fx:id="listArticlesLink" layoutX="106.0" layoutY="170.0" onAction="#handleListArticles" style="-fx-background-color: transparent;" text="List articles" textFill="#00ffc9" />
+            <Hyperlink fx:id="deleteArticleLink" layoutX="96.0" layoutY="145.0" onAction="#handleDeleteArticle" style="-fx-background-color: transparent;" text="Delete article(s)" textFill="#00ffc9" />
+            <Hyperlink fx:id="backupLink" layoutX="115.0" layoutY="245.0" onAction="#handleBackup" style="-fx-background-color: transparent;" text="Backup" textFill="#00ffc9" />
+            <Hyperlink fx:id="listGroupsLink" layoutX="105.0" layoutY="220.0" onAction="#handleListGroups" style="-fx-background-color: transparent;" text="List groups" textFill="#00ffc9" />
+            <Hyperlink fx:id="createGroupLink" layoutX="84.0" layoutY="195.0" onAction="#handleCreateGroup" style="-fx-background-color: transparent;" text="Create a new group" textFill="#00ffc9" />
+            <Hyperlink fx:id="restoreLink" layoutX="114.0" layoutY="270.0" onAction="#handleRestore" style="-fx-background-color: transparent;" text="Restore" textFill="#00ffc9" />
+         </children>
+      </AnchorPane>
+   </right>
+   <left>
+      <AnchorPane prefHeight="401.0" prefWidth="323.0" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
+         <children>
+             <Hyperlink alignment="CENTER" layoutX="67.0" layoutY="32.0" prefHeight="35.0" prefWidth="197.0" style="-fx-background-color: transparent;" text="Select group to backup" textFill="#00ffc9">
+                <font>
+                   <Font size="18.0" />
+                </font>
+             </Hyperlink>
+            <Text fill="WHITE" layoutX="92.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter a group ID" wrappingWidth="156.0" />
+            <TextField fx:id="groupIDField" layoutX="92.0" layoutY="113.0" prefHeight="25.0" prefWidth="139.0" />
+            <Button fx:id="proceedButton" disable="true" layoutX="92.0" layoutY="208.0" mnemonicParsing="false" onAction="#handleProceed" prefHeight="25.0" prefWidth="139.0" style="-fx-background-color: #00ffc9;" text="Proceed" />
+            <Text fill="WHITE" layoutX="92.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(enter 0 for all articles)" wrappingWidth="156.0" />
+            <Text fill="WHITE" layoutX="92.0" layoutY="159.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Specify backup path" wrappingWidth="156.0" />
+            <TextField fx:id="backupPathField" layoutX="92.0" layoutY="163.0" prefHeight="25.0" prefWidth="139.0" />
+         </children>
+      </AnchorPane>
+   </left>
+</BorderPane>
