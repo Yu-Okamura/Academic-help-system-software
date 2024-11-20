@@ -27,7 +27,7 @@
             <Hyperlink fx:id="backupLink" layoutX="115.0" layoutY="245.0" onAction="#handleBackup" style="-fx-background-color: transparent;" text="Backup" textFill="#00ffc9" />
             <Hyperlink fx:id="listGroupsLink" layoutX="105.0" layoutY="220.0" onAction="#handleListGroups" style="-fx-background-color: transparent;" text="List groups" textFill="#00ffc9" />
             <Hyperlink fx:id="createGroupLink" layoutX="84.0" layoutY="195.0" onAction="#handleCreateGroup" style="-fx-background-color: transparent;" text="Create a new group" textFill="#00ffc9" />
-            <Hyperlink fx:id="restoreLink" layoutX="114.0" layoutY="270.0" onAction="#handleRestore" style="-fx-background-color: transparent;" text="Restore" textFill="#00ffc9" />
+            <Hyperlink fx:id="restoreLink" layoutX="114.0" layoutY="270.0" onAction="#handleRestore" style="-fx-background-color: transparent;" text="Restore" textFill="#00ffc9" />       
          </children>
       </AnchorPane>
    </right>

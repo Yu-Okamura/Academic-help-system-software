@@ -23,7 +23,7 @@
                </font>
             </Text>
             <Hyperlink fx:id="createArticleLink" layoutX="84.0" layoutY="95.0" onAction="#handleCreateArticle" style="-fx-background-color: transparent;" text="Create a new article" textFill="#00ffc9" />
-            <Hyperlink fx:id="updateArticleLink" layoutX="90.0" layoutY="120.0" onAction="#handleUpdateArticle" style="-fx-background-color: transparent;" text="Update an article" textFill="#00ffc9" />
+            <Hyperlink fx:id="updateArticleLink" layoutX="90.0" layoutY="120.0" onAction="#handleUpdateArticle" style="-fx-background-color: transparent;" text="View/Update an article" textFill="#00ffc9" />
             <Hyperlink fx:id="listArticlesLink" layoutX="106.0" layoutY="170.0" onAction="#handleListArticles" style="-fx-background-color: transparent;" text="List articles" textFill="#00ffc9" />
             <Hyperlink fx:id="deleteArticleLink" layoutX="96.0" layoutY="145.0" onAction="#handleDeleteArticle" style="-fx-background-color: transparent;" text="Delete article(s)" textFill="#00ffc9" />
             <Hyperlink fx:id="backupLink" layoutX="115.0" layoutY="245.0" onAction="#handleBackup" style="-fx-background-color: transparent;" text="Backup" textFill="#00ffc9" />
@@ -43,9 +43,12 @@
              </Hyperlink>
             <TableView fx:id="groupTable" layoutX="19.0" layoutY="77.0" prefHeight="305.0" prefWidth="288.0" style="-fx-font-size: 8;">
               <columns>
-                <TableColumn fx:id="nameColumn" prefWidth="116.0" text="Name" />
-                <TableColumn fx:id="idColumn" prefWidth="22.0" text="ID" />
-                <TableColumn fx:id="articlesColumn" prefWidth="149.0" text="Article IDs under group" />
+                <TableColumn fx:id="nameColumn" prefWidth="69.0" text="Name" />
+                <TableColumn fx:id="idColumn" prefWidth="13.0" text="ID" />
+                <TableColumn fx:id="articlesColumn" prefWidth="49.0" text="Articles" />
+                  <TableColumn fx:id="adminColumn" prefWidth="41.0" text="Ad" />
+                  <TableColumn fx:id="instructorColumn" prefWidth="37.0" text="In" />
+                  <TableColumn fx:id="studentColumn" prefWidth="78.0" text="St" />
               </columns>
             </TableView>
          </children>
