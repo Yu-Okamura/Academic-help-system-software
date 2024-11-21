@@ -8,7 +8,7 @@
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
-<BorderPane prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: black;" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Scene14UpdateArticle">
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Scene14ListArticle">
    <right>
       <AnchorPane prefHeight="360.0" prefWidth="277.0" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
          <children>
@@ -35,18 +35,19 @@
          </children>
       </AnchorPane>
    </right>
-   <center>
-      <AnchorPane prefHeight="651.0" prefWidth="323.0" style="-fx-background-color: #000000;">
+   <left>
+      <AnchorPane prefHeight="401.0" prefWidth="323.0" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
          <children>
-             <Hyperlink alignment="CENTER" layoutX="51.0" layoutY="32.0" prefHeight="35.0" prefWidth="223.0" style="-fx-background-color: transparent;" text="Select article to update" textFill="#00ffc9">
+             <Hyperlink alignment="CENTER" layoutX="74.0" layoutY="32.0" prefHeight="35.0" prefWidth="176.0" style="-fx-background-color: transparent;" text="Select group to list" textFill="#00ffc9">
                 <font>
                    <Font size="18.0" />
                 </font>
              </Hyperlink>
-             <Text fill="WHITE" layoutX="92.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter article ID" wrappingWidth="79.0" />
-             <TextField fx:id="articleIDField" layoutX="92.0" layoutY="99.0" prefHeight="25.0" prefWidth="139.0" />
-             <Button fx:id="proceedButton" disable="true" layoutX="93.0" layoutY="144.0" mnemonicParsing="false" prefHeight="25.0" prefWidth="139.0" style="-fx-background-color: #00ffc9;" text="Proceed" onAction="#handleProceed" />
+            <Text fill="WHITE" layoutX="92.0" layoutY="95.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter a group ID" wrappingWidth="156.0" />
+            <TextField fx:id="groupIDField" layoutX="92.0" layoutY="113.0" prefHeight="25.0" prefWidth="139.0" />
+            <Button fx:id="proceedButton" disable="true" layoutX="93.0" layoutY="163.0" mnemonicParsing="false" onAction="#handleProceed" prefHeight="25.0" prefWidth="139.0" style="-fx-background-color: #00ffc9;" text="Proceed" />
+            <Text fill="WHITE" layoutX="92.0" layoutY="109.0" strokeType="OUTSIDE" strokeWidth="0.0" text="(enter 0 to list all articles)" wrappingWidth="156.0" />
          </children>
       </AnchorPane>
-   </center>
+   </left>
 </BorderPane>

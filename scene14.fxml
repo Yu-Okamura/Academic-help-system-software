@@ -15,19 +15,21 @@
                   <Font size="10.0" />
                </font>
             </Hyperlink>
-            <Text fill="#00ffc9" layoutX="73.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Edit help articles">
+            <Text fill="#00ffc9" layoutX="59.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Manage help articles">
                <font>
                   <Font size="18.0" />
                </font>
             </Text>
             <Hyperlink fx:id="createArticleLink" layoutX="84.0" layoutY="95.0" onAction="#handleCreateArticle" style="-fx-background-color: transparent;" text="Create a new article" textFill="#00ffc9" />
-            <Hyperlink fx:id="updateArticleLink" layoutX="77.0" layoutY="120.0" onAction="#handleUpdateArticle" style="-fx-background-color: transparent;" text="View/Update an article" textFill="#00ffc9" />
+            <Hyperlink fx:id="updateArticleLink" layoutX="89.0" layoutY="120.0" onAction="#handleUpdateArticle" style="-fx-background-color: transparent;" text="Update an article" textFill="#00ffc9" />
             <Hyperlink fx:id="listArticlesLink" layoutX="106.0" layoutY="170.0" onAction="#handleListArticles" style="-fx-background-color: transparent;" text="List articles" textFill="#00ffc9" />
             <Hyperlink fx:id="deleteArticleLink" layoutX="96.0" layoutY="145.0" onAction="#handleDeleteArticle" style="-fx-background-color: transparent;" text="Delete article(s)" textFill="#00ffc9" />
-            <Hyperlink fx:id="backupLink" layoutX="115.0" layoutY="245.0" onAction="#handleBackup" style="-fx-background-color: transparent;" text="Backup" textFill="#00ffc9" />
-            <Hyperlink fx:id="listGroupsLink" layoutX="105.0" layoutY="220.0" onAction="#handleListGroups" style="-fx-background-color: transparent;" text="List groups" textFill="#00ffc9" />
-            <Hyperlink fx:id="createGroupLink" layoutX="84.0" layoutY="195.0" onAction="#handleCreateGroup" style="-fx-background-color: transparent;" text="Create a new group" textFill="#00ffc9" />
-            <Hyperlink fx:id="restoreLink" layoutX="114.0" layoutY="270.0" onAction="#handleRestore" style="-fx-background-color: transparent;" text="Restore" textFill="#00ffc9" />       
+            <Hyperlink fx:id="backupLink" layoutX="115.0" layoutY="295.0" onAction="#handleBackup" style="-fx-background-color: transparent;" text="Backup" textFill="#00ffc9" />
+            <Hyperlink fx:id="listGroupsLink" layoutX="105.0" layoutY="270.0" onAction="#handleListGroups" style="-fx-background-color: transparent;" text="List groups" textFill="#00ffc9" />
+            <Hyperlink fx:id="createGroupLink" layoutX="84.0" layoutY="245.0" onAction="#handleCreateGroup" style="-fx-background-color: transparent;" text="Create a new group" textFill="#00ffc9" />
+            <Hyperlink fx:id="restoreLink" layoutX="114.0" layoutY="320.0" onAction="#handleRestore" style="-fx-background-color: transparent;" text="Restore" textFill="#00ffc9" />
+            <Hyperlink fx:id="findArticlesLink" layoutX="100.0" layoutY="195.0" onAction="#handleFindArticles" style="-fx-background-color: transparent;" text="Find article(s)" textFill="#00ffc9" />
+            <Hyperlink fx:id="viewArticleLink" layoutX="99.0" layoutY="220.0" onAction="#handleViewArticle" style="-fx-background-color: transparent;" text="View an article" textFill="#00ffc9" />       
          </children>
       </AnchorPane>
    </right>
