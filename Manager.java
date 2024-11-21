@@ -31,13 +31,14 @@ import java.util.Base64;
 
 import application.User;
 
+import java.util.Base64;
+
+import application.EncryptionHelper;
+import application.EncryptionUtils;
 
 import org.json.JSONArray;
 
 import application.User;
-
-import application.EncryptionHelper;
-import application.EncryptionUtils;
 
 public class Manager {
 	
@@ -125,11 +126,12 @@ public class Manager {
     	String database =  "create database CSE360;";
     	String use = " use CSE360;";
     	String table1 = "create table invitecode_table(invitecode varchar(100) primary key, role int) ;";
-    	String table2 = "create table userinfo(ID int primary key, Username varchar(25) unique key, Password varchar(25), Name varchar(25), Email varchar(50), role_id int);";
+    	String table2 = "create table userinfo(ID int auto_increment primary key, Username varchar(25) unique key, Password varchar(25), Name varchar(25), Email varchar(50), role_id int);";
     	String table3 = "create table articles(ID bigint AUTO_INCREMENT primary key, Title varchar(255),Discription text, Body text, Group_ids varchar(255), Reference_Articles varchar(255), Keywords varchar(255), Level varchar(30));";
     	String table4 = "create table group_table(EntryID BIGINT AUTO_INCREMENT PRIMARY KEY, ID bigint DEFAULT NULL, Name varchar(255), ArticleID bigint NULL);";
     	String table5 = "create table user_roles(user_id int, role_id int, PRIMARY KEY(user_id, role_id));";
-	String table6 = "create table user_groups(user_id INT, group_id BIGINT, role_id INT, can_decrypt BOOL, PRIMARY KEY(user_id, group_id));";
+    	String table6 = "create table user_groups(user_id INT, group_id BIGINT, role_id INT, can_decrypt BOOL, PRIMARY KEY(user_id, group_id));";
+    	
     	//starts group increment at 5; 1-4 is Beginner-Expert
     	String[] inviteCodes = {"CODE001", "CODE002", "CODE003", "CODE004", "CODE005", "CODE007", "CODE008", "CODE009", "CODE010"};
     	try(Connection connection = this.connection; Statement statement = connection.createStatement()){
@@ -147,6 +149,14 @@ public class Manager {
     		System.out.println("groups table created");
     		statement.executeUpdate(table5);
     		System.out.println("roles table created");
+    		statement.executeUpdate(table6);
+    		System.out.println("user_groups table created");
+    		
+    		createGroup("Beginner");
+    		createGroup("Intermediate");
+    		createGroup("Advanced");
+    		createGroup("Expert");
+    		
 		/* roles:
 			1-Admin
 		2-Student
@@ -175,6 +185,7 @@ public class Manager {
 	
 	public void createUser(User user, String invite_code) {
 	    int num_users = getUserCount(); // Get current user count
+
 	    String query = "INSERT INTO userinfo (username, password, name, email) VALUES(?, ?, ?, ?)";
 	
 	    try (PreparedStatement statement = this.connection.prepareStatement(query)) {
@@ -191,15 +202,23 @@ public class Manager {
 	        System.out.println("SQL Error: " + e.getMessage());
 	        e.printStackTrace();
 	    }
+        int userID = getUserID(user);
+
 	
 	    // If this is the first user, assign admin role
 	    if (num_users == 0) {
-	        int userID = getUserID(user);
 	        giveRole(userID, 1);
 	    }
+	    	    	    
+	    addUserToGroup(userID, 1, 2, true);
+	    addUserToGroup(userID, 2, 2, true);
+	    addUserToGroup(userID, 3, 2, true);
+	    addUserToGroup(userID, 4, 2, true);
+	    
 	}
 	
 	public void giveRole(int userID, int role) {
+		//adding role to user_roles table
 	    String query = "INSERT INTO user_roles(user_id, role_id) VALUES(?, ?)";
 	
 	    try (PreparedStatement statement = this.connection.prepareStatement(query)) {
@@ -213,6 +232,78 @@ public class Manager {
 	    } catch (SQLException e) {
 	        System.out.println("SQL Error: " + e.getMessage());
 	    }
+	    
+	    //adding role to userinfo role_id column
+	    ArrayList<Integer> roles = getRoleList(userID);
+	    
+	    //default
+	    int role_id = -1;
+	    
+	    if(roles.contains(1)) {
+	    	role_id = 1;
+	    	if(roles.contains(2)) {
+	    		role_id = 4;
+	    		
+	    		if(roles.contains(3)) {
+	    			role_id = 7;
+	    		}
+	    	}
+	    	else if(roles.contains(3)) {
+	    		role_id = 5;
+	    	}
+	    }
+	    else if(roles.contains(2)) {
+	    	role_id = 2;
+	    	
+	    	if(roles.contains(3)) {
+	    		role_id = 6;
+	    	}
+	    }
+	    else if(roles.contains(3)) {
+	    	role_id = 3;
+	    }
+	    
+	    String query3 = "UPDATE userinfo SET role_id = ? WHERE ID = ?";
+	    
+	    try (PreparedStatement statement = this.connection.prepareStatement(query3)) {
+
+	        statement.setInt(1, role_id); 
+	        statement.setInt(2, userID);    
+
+
+	        int rowsAffected = statement.executeUpdate();
+
+	        if (rowsAffected > 0) {
+	            System.out.println("Role updated successfully to " + role_id + " for user ID: " + userID);
+	        } else {
+	            System.out.println("Failed updating role for user ID: " + userID);
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("SQL Error: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+	    
+	}
+	
+	public ArrayList<Integer> getRoleList(int userID){
+		
+	    ArrayList<Integer> roles = new ArrayList<>(); 
+	    String query2 = "SELECT role_id FROM user_roles WHERE user_id = ?";
+	    
+	    try (PreparedStatement statement = this.connection.prepareStatement(query2)) {
+	        statement.setInt(1, userID);
+
+	        try (ResultSet result = statement.executeQuery()) {
+	            while (result.next()) {
+	                roles.add(result.getInt("role_id"));
+	            }
+	        }
+	    } catch (SQLException e) {
+	        System.out.println("SQL Error: " + e.getMessage());
+	        e.printStackTrace();
+	    }
+	    
+	    return roles;
 	}
 	
 	public int getUserCount() {
@@ -331,32 +422,32 @@ public class Manager {
 	public String[][] searchArticles(String searchTerm) {
 	    ArrayList<String[]> matchingArticles = new ArrayList<>();
 	    String[] terms = searchTerm.split(" "); // Split search terms by spaces
-	
+
 	    // Build SQL query dynamically for multiple terms
-	    StringBuilder queryBuilder = new StringBuilder("SELECT ID, Title, Authors, Keywords, Body, Reference_Articles, Level FROM articles WHERE ");
+	    StringBuilder queryBuilder = new StringBuilder("SELECT ID, Title, Keywords, Body, Reference_Articles, Discription, Level FROM articles WHERE ");
 	    for (int i = 0; i < terms.length; i++) {
 	        if (i > 0) queryBuilder.append(" AND ");
-	        queryBuilder.append("(LOWER(Title) LIKE ? OR LOWER(Authors) LIKE ? OR LOWER(Keywords) LIKE ? OR LOWER(Body) LIKE ?)");
+	        queryBuilder.append("(LOWER(Title) LIKE ? OR LOWER(Keywords) LIKE ? OR LOWER(Body) LIKE ? OR LOWER(Reference_Articles) LIKE ? OR LOWER(Discription) LIKE ? OR LOWER(Level) LIKE ?)");
 	    }
-	
+
 	    try (PreparedStatement statement = connection.prepareStatement(queryBuilder.toString())) {
 	        int paramIndex = 1;
 	        for (String term : terms) {
 	            String searchPattern = "%" + term.toLowerCase() + "%"; // Create search pattern
-	            for (int j = 0; j < 4; j++) {
+	            for (int j = 0; j < 6; j++) { // Update loop count to 6 for each column
 	                statement.setString(paramIndex++, searchPattern);
 	            }
 	        }
-	
+
 	        try (ResultSet rs = statement.executeQuery()) {
 	            while (rs.next()) {
 	                String[] article = new String[7]; // Array to hold matched article data
 	                article[0] = rs.getString("ID");
 	                article[1] = rs.getString("Title");
-	                article[2] = rs.getString("Authors");
-	                article[3] = rs.getString("Keywords");
-	                article[4] = rs.getString("Body");
-	                article[5] = rs.getString("Reference_Articles");
+	                article[2] = rs.getString("Keywords");
+	                article[3] = rs.getString("Body");
+	                article[4] = rs.getString("Reference_Articles");
+	                article[5] = rs.getString("Discription");
 	                article[6] = rs.getString("Level");
 	                matchingArticles.add(article); // Add to results list
 	            }
@@ -365,9 +456,55 @@ public class Manager {
 	        System.out.println("Error searching articles: " + e.getMessage());
 	        e.printStackTrace();
 	    }
-	
+
 	    return matchingArticles.toArray(new String[0][]); // Return matched articles as array
 	}
+	
+	ArrayList<String[]> filterArticlesByGroup(int group_id) {
+		ArrayList<String[]> articles = new ArrayList<>();
+		String query = "SELECT * FROM group_table WHERE ID = ? AND ArticleID IS NOT NULL";
+		
+		ArrayList<Integer> article_ids = new ArrayList<>();
+		
+		try(PreparedStatement statement = connection.prepareStatement(query)){
+			statement.setInt(1, group_id);
+			
+			try(ResultSet result = statement.executeQuery()){
+				while(result.next()) {
+					article_ids.add(result.getInt("ArticleID"));
+				}
+			}
+			
+			
+		} catch(SQLException e) {
+			System.out.println("Error filtering articles by group: " + e.getMessage());
+		}
+		
+	    String query2 = "SELECT ID, Title, Group_ids, Keywords, Body, Reference_Articles, Level FROM articles WHERE ID = ?";
+	    for (int article_id : article_ids) {
+	        try (PreparedStatement stmt = connection.prepareStatement(query2)) {
+	            stmt.setInt(1, article_id);
+	            try (ResultSet rs = stmt.executeQuery()) {
+	                while (rs.next()) {
+	                    String[] article = new String[7];
+	                    article[0] = String.valueOf(rs.getLong("ID"));
+	                    article[1] = rs.getString("Title");
+	                    article[2] = rs.getString("Group_ids");
+	                    article[3] = rs.getString("Keywords");
+	                    article[4] = rs.getString("Body");
+	                    article[5] = rs.getString("Reference_Articles");
+	                    article[6] = rs.getString("Level");
+	                    articles.add(article);
+	                }
+	            }
+	        } catch (SQLException e) {
+	            System.out.println("Error fetching article details: " + e.getMessage());
+	        }
+	    }
+
+	    return articles;
+	}
+
 	
 	public void update_article(long identifier, String title, String discription, String body, String group_ids, String ref, String keywords, String level) throws Exception {
 	    String update_article = "UPDATE articles SET Title = ?, Discription = ?, Body = ?, Group_ids = ?, Reference_Articles = ?, Keywords = ?, Level = ? WHERE ID = ?";
@@ -471,6 +608,76 @@ public class Manager {
 	    }
 	}
 	
+	public void addUserToGroup(int user_id, long group_id, int role_id, boolean can_decrypt){
+		//if first instructor in group
+		ArrayList<Integer> roles = getRoleList(user_id);
+		
+		if(getUsersByRoleInGroup(group_id, 3).size() == 0 && roles.contains(2)) {
+			role_id = 1;
+			can_decrypt = true;
+		}
+		String query = "INSERT INTO user_groups(user_id, group_id, role_id, can_decrypt) VALUES (?, ?, ?, ?)";
+		
+		try(PreparedStatement statementInsert = connection.prepareStatement(query)) {
+			statementInsert.setInt(1, user_id);
+			statementInsert.setLong(2, group_id);
+			statementInsert.setInt(3, role_id);
+			statementInsert.setBoolean(4, can_decrypt);
+			
+			statementInsert.executeUpdate();
+			System.out.println("User ID: " + user_id + " added to group ID: " + group_id);
+			
+		} catch (SQLException e){
+			System.out.println("Error adding user to group: " + e.getMessage());
+		}
+	}
+	
+	public ArrayList<Integer> getUsersByRoleInGroup(long group_id, int role_id){
+		ArrayList<Integer> user_ids = new ArrayList<>();
+		String query;
+		if(role_id == 1) {
+			query = "SELECT user_id FROM user_groups WHERE group_id = ? AND role_id = ?";
+			
+			try(PreparedStatement statement = connection.prepareStatement(query)){
+				statement.setLong(1, group_id);
+				statement.setInt(2, role_id);
+				
+		        try (ResultSet result = statement.executeQuery()) {
+		            while (result.next()) {
+		                user_ids.add(result.getInt("user_id"));
+		            }
+		        }
+				
+			} catch(SQLException e) {
+				System.out.println("Error getting users from group: " + e.getMessage());
+			}
+		}
+		return user_ids;
+	}
+	
+
+	public int validateUserGroup(int user_id, int group_id) {
+		//assumee user is not in group
+		int in_group = -1;
+		
+		String query = "SELECT * FROM user_groups WHERE user_id = ? AND group_id = ?";
+		
+		try(PreparedStatement statementSelect = connection.prepareStatement(query)){
+			statementSelect.setInt(1, user_id);
+			statementSelect.setInt(2, group_id);
+			
+			try(ResultSet resultSet = statementSelect.executeQuery()){
+				if(resultSet.next()) {
+					in_group = resultSet.getInt("role_id");
+				}
+			}
+		} catch(SQLException e) {
+			System.out.println("Error verifying user group: " + e.getMessage());
+		}
+		
+		return in_group;
+	}
+	
 	private String getGroupNameById(long group_id) {
 	    String query = "SELECT Name FROM group_table WHERE ID = ? LIMIT 1";
 	    try (PreparedStatement statement = connection.prepareStatement(query)) {
@@ -486,24 +693,72 @@ public class Manager {
 	    return "Unknown"; // Return "Unknown" if no group name found
 	}
 	
-	public void create_article(String title, String discription, String body, String group_ids, String ref, String keywords, String level) throws Exception {
-	    String insertArticle = "INSERT INTO articles (Title, Discription, Body, Group_ids, Reference_Articles, Keywords, Level) VALUES (?, ?, ?, ?, ?, ?, ?)";
-	    try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) {
-	        pstmt.setString(1, title);         // Set title
-	        pstmt.setString(2, discription);   // Set description
-	        pstmt.setString(3, body);          // Set body content
-	        pstmt.setString(4, group_ids);     // Set group IDs
-	        pstmt.setString(5, ref);           // Set references
-	        pstmt.setString(6, keywords);      // Set keywords
-	        pstmt.setString(7, level);         // Set level
-	        pstmt.executeUpdate();             // Execute article insertion
-	        System.out.println("Article created successfully");
-	    } catch (SQLException e) {
-	        System.out.println("Error creating article: " + e.getMessage());
-	    }
+	public boolean canUserModifyArticle(int user_id, int article_id) {
+		String article_groups_query = "SELECT ID FROM group_table WHERE ArticleID = ?";
+		ArrayList <Integer> article_groups = new ArrayList<>();
+		
+		try(PreparedStatement statement = connection.prepareStatement(article_groups_query)){
+			statement.setInt(1, article_id);
+			ResultSet resultSet = statement.executeQuery();
+			
+			while(resultSet.next()) {
+				article_groups.add(resultSet.getInt("ID"));
+			}
+		} catch(SQLException e) {
+			System.out.println("Error getting groups that can modify article");
+		}
+		
+		for(int group_id : article_groups) {
+
+			if(validateUserGroup(user_id, group_id) == 1) {
+				return true;
+			}
+		}
+		
+		return false;
 	}
 	
-	public boolean delete_article(int ID) throws Exception {
+	public void create_article(int current_role, String title, String discription, String body, String group_ids, String ref, String keywords, String level) throws Exception {
+        if (current_role == 3) {
+            System.out.println("Error: Students cannot create articles.");
+            return;
+        }
+
+        String insertArticle = "INSERT INTO articles (Title, Discription, Body, Group_ids, Reference_Articles, Keywords, Level) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        try (PreparedStatement pstmt = connection.prepareStatement(insertArticle, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            pstmt.setString(1, title);         // Set title
+            pstmt.setString(2, discription);   // Set description
+            pstmt.setString(3, body);          // Set body content
+            pstmt.setString(4, group_ids);     // Set group IDs
+            pstmt.setString(5, ref);           // Set references
+            pstmt.setString(6, keywords);      // Set keywords
+            pstmt.setString(7, level);         // Set level
+            pstmt.executeUpdate();             // Execute article insertion
+            System.out.println("Article created successfully");
+
+            // Retrieve the auto-generated article ID
+            try (ResultSet generatedKeys = pstmt.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    long articleId = generatedKeys.getLong(1);
+                    System.out.println("Generated Article ID: " + articleId);
+
+                    // Add article to each group in group_ids
+                    String[] groupIdList = group_ids.split(",");
+                    for (String groupId : groupIdList) {
+                        addArticleToGroup(articleId, Long.parseLong(groupId.trim()));
+                    }
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Error creating article: " + e.getMessage());
+        }
+    }
+	
+	public boolean delete_article(int current_role, int ID) throws Exception {
+		if(current_role == 3) {
+			System.out.println("Error: Student cannot delete articles.");
+		}
+		
 	    String query = "DELETE FROM articles WHERE ID = ?";
 	    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
 	        pstmt.setInt(1, ID); // Set article ID to delete
@@ -889,312 +1144,5 @@ public class Manager {
 	public String getInviteCode(int index) {
 	    return this.inviteCodes[index]; // Return invite code at specified index
 	}
-	public void create_articleENC(String title, String discription, String body, String group_ids, String ref, String keywords, String level) throws Exception {
-	//encrypting
-			byte[] iv = EncryptionUtils.getInitializationVector(title.toCharArray());
-			String etitle = Base64.getEncoder().encodeToString(
-					encryptionHelper.encrypt(title.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
-			);	
-			String ediscription = Base64.getEncoder().encodeToString(
-					encryptionHelper.encrypt(discription.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
-			);	
-			String ebody = Base64.getEncoder().encodeToString(
-					encryptionHelper.encrypt(body.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
-			);	
-			String egroup_ids = Base64.getEncoder().encodeToString(
-					encryptionHelper.encrypt(group_ids.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
-			);	
-			String eref = Base64.getEncoder().encodeToString(
-					encryptionHelper.encrypt(ref.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
-			);	
-			String ekeywords = Base64.getEncoder().encodeToString(
-					encryptionHelper.encrypt(keywords.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
-			);	
-			String elevel = Base64.getEncoder().encodeToString(
-					encryptionHelper.encrypt(level.getBytes(), EncryptionUtils.getInitializationVector(title.toCharArray()))
-			);	
-			String ivE = Base64.getEncoder().encodeToString(iv);
-		
-		String insertArticle = "INSERT INTO articles (Title ,Discription , Body , Group_ids , Reference_Articles , Keywords , Level , IV ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-		try (PreparedStatement pstmt = connection.prepareStatement(insertArticle)) {
-			pstmt.setString(1, etitle);
-			pstmt.setString(2, ediscription);
-			pstmt.setString(3, ebody);
-			pstmt.setString(4, egroup_ids);
-			pstmt.setString(5, eref);
-			pstmt.setString(6, ekeywords);
-			pstmt.setString(7, elevel);
-			pstmt.setString(8, ivE);
-			pstmt.executeUpdate();
-			System.out.println("Article created successfully" );
-		}catch(SQLException e) {
-			System.out.println("Error Restoring" +e.getMessage());
-		}
-	}
-   public boolean delete_article(int ID) throws Exception {	
-	
-		String query = "DELETE FROM articles WHERE ID = ? ";
-	
-		try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-			pstmt.setInt(1, ID);
-			
-			
-			int row = pstmt.executeUpdate();
-			return row >0 ;
-			
-	  }
-		catch(SQLException e) {
-			System.out.println("Error Restoring" +e.getMessage());
-			return false;
-		}
-	}
-   public void listArticlesDEC() throws Exception{
-		String sql = "SELECT * FROM articles"; 
-		try(Statement stmt = connection.createStatement();
-		ResultSet rs = stmt.executeQuery(sql)){ 
-
-		while(rs.next()) { 
-			
-			int id = rs.getInt("ID");
-			String  title = rs.getString("Title"); 
-			String dis = rs.getString("Discription");  
-			String body = rs.getString("Body"); 
-			String  gid = rs.getString("Group_ids"); 
-			String ref = rs.getString("Reference_Articles");  
-			String keywords = rs.getString("Keywords");
-			String level = rs.getString("Level");
-			String Encode = rs.getString("IV");
-			
-			byte [] iv = Base64.getDecoder().decode(Encode);
-			
-			char[] dtitle = EncryptionUtils.toCharArray(
-					encryptionHelper.decrypt(
-							Base64.getDecoder().decode(
-									title
-							), 
-							iv
-					)	
-			);
-			char[] ddis = EncryptionUtils.toCharArray(
-					encryptionHelper.decrypt(
-							Base64.getDecoder().decode(
-									dis
-							), 
-							iv
-					)	
-			);
-			char[] dbody = EncryptionUtils.toCharArray(
-					encryptionHelper.decrypt(
-							Base64.getDecoder().decode(
-									body
-							), 
-							iv
-					)	
-			);
-			char[] dgid = EncryptionUtils.toCharArray(
-					encryptionHelper.decrypt(
-							Base64.getDecoder().decode(
-									gid
-							), 
-							iv
-					)	
-			);
-			char[] dref = EncryptionUtils.toCharArray(
-					encryptionHelper.decrypt(
-							Base64.getDecoder().decode(
-									ref
-							), 
-							iv
-					)	
-			);
-			char[] dkeywords = EncryptionUtils.toCharArray(
-					encryptionHelper.decrypt(
-							Base64.getDecoder().decode(
-									keywords
-							), 
-							iv
-					)	
-			);
-			char[] dlevel = EncryptionUtils.toCharArray(
-					encryptionHelper.decrypt(
-							Base64.getDecoder().decode(
-									level
-							), 
-							iv
-					)	
-			);
-			
-
-			 
-			System.out.println("ID: " + id); 
-			System.out.println(", Title: " + new String(dtitle)); 
-			System.out.println(", Discription: " + new String(ddis)); 
-			System.out.println(", Body: " + new String(dbody)); 
-			System.out.println(", Group_ids: " + new String (dgid)); 
-			System.out.println(", Reference_Articles: " + new String(dref));
-			System.out.println(", Keywords: " + new String(dkeywords)); 
-			System.out.println(", level: " + new String(dlevel)); 
-		}
-		}
-			
-   }
-   
-   		public List<String[]> getArticlesByGroup(String group) throws SQLException{
-   			List<String[]> articles = new ArrayList<>();
-   			String query;
-   			if (group != null && !group.equalsIgnoreCase("all")) {
-   				query = "SELECT ID, Title, Keywords, Body, Reference_Articles, Level FROM articles WHERE Level =?";
-   			}else {
-   				query = "SELECT ID, Title, Keywords, Body, Reference_Articles, Level FROM articles ";
-   			}
-   			
-   			try (PreparedStatement statement = connection.prepareStatement(query)){
-   				if (group != null && !group.equalsIgnoreCase("all")) {
-   					statement.setString(1,  group);
-   				}
-   				
-   				try (ResultSet rs = statement.executeQuery()){
-   					while (rs.next()) {
-   						String[] article = new String[6];
-   						article[0] = String.valueOf(rs.getLong("ID"));
-   						article[1] = rs.getString("Title");
-   						article[2] = rs.getString("Keywords");
-   						article[3] = rs.getString("Body");
-   						article[4] = rs.getString("Reference_Articles");
-   						article[5] = rs.getString("Level");
-   						articles.add(article);
-   						
-   					}
-   					
-   					if (articles.isEmpty()) {
-   						System.out.println("No articles found for the specified group.");
-   					}
-   				}
-   			}catch (SQLException e) {
-   				System.out.println("Error retrieving articles: "+ e.getMessage());
-   				e.printStackTrace();
-   			}
-   			
-   			return articles;
-   			
-   		}
-
-		public void addUserToGroup(int user_id, long group_id, int role_id, boolean can_decrypt){
-			//if first instructor in group
-			ArrayList<Integer> roles = getRoleList(user_id);
-			
-			if(getUsersByRoleInGroup(group_id, 3).size() == 0 && roles.contains(2)) {
-				role_id = 1;
-				can_decrypt = true;
-			}
-			String query = "INSERT INTO user_groups(user_id, group_id, role_id, can_decrypt) VALUES (?, ?, ?, ?)";
-			
-			try(PreparedStatement statementInsert = connection.prepareStatement(query)) {
-				statementInsert.setInt(1, user_id);
-				statementInsert.setLong(2, group_id);
-				statementInsert.setInt(3, role_id);
-				statementInsert.setBoolean(4, can_decrypt);
-				
-				statementInsert.executeUpdate();
-				System.out.println("User ID: " + user_id + " added to group ID: " + group_id);
-				
-			} catch (SQLException e){
-				System.out.println("Error adding user to group: " + e.getMessage());
-			}
-		}
-		
-		public ArrayList<Integer> getUsersByRoleInGroup(long group_id, int role_id){
-			ArrayList<Integer> user_ids = new ArrayList<>();
-			String query;
-			if(role_id == 1) {
-				query = "SELECT user_id FROM user_groups WHERE group_id = ? AND role_id = ?";
-				
-				try(PreparedStatement statement = connection.prepareStatement(query)){
-					statement.setLong(1, group_id);
-					statement.setInt(2, role_id);
-					
-			        try (ResultSet result = statement.executeQuery()) {
-			            while (result.next()) {
-			                user_ids.add(result.getInt("user_id"));
-			            }
-			        }
-					
-				} catch(SQLException e) {
-					System.out.println("Error getting users from group: " + e.getMessage());
-				}
-			}
-			return user_ids;
-		}
-	
-	
-	
-	//this one below is for access control to tick the box**
-	
-		public boolean validateUserGroup(int user_id, int group_id) {
-			//assumee user is not in group
-			boolean in_group = false;
-			
-			String query = "SELECT  * FROM user_groups WHERE user_id = ? AND group_id = ?";
-			
-			try(PreparedStatement statementSelect = connection.prepareStatement(query)){
-				statementSelect.setInt(1, user_id);
-				statementSelect.setInt(2, group_id);
-				
-				try(ResultSet resultSelect = statementSelect.executeQuery()){
-					in_group = resultSelect.next();
-				}
-			} catch(SQLException e) {
-				System.out.println("Error verifying user group: " + e.getMessage());
-			}
-			
-			return in_group;
-		}
-	   	public boolean canUserModifyArticle(int user_id, int article_id) {
-		        String article_groups_query = "SELECT ID FROM group_table WHERE ArticleID = ?";
-		        ArrayList <Integer> article_groups = new ArrayList<>();
-		
-		        try(PreparedStatement statement = connection.prepareStatement(article_groups_query)){
-		            statement.setInt(1, article_id);
-		            ResultSet resultSet = statement.executeQuery();
-		
-		            while(resultSet.next()) {
-		                article_groups.add(resultSet.getInt("ID"));
-		            }
-		        } catch(SQLException e) {
-		            System.out.println("Error getting groups that can modify article");
-		        }
-		
-		        for(int group_id : article_groups) {
-		
-		            if(validateUserGroup(user_id, group_id) == 1) {
-		                return true;
-		            }
-		        }
-		
-		        return false;
-		    }
-		public int validateUserGroup(int user_id, int group_id) {
-		        //assumee user is not in group
-		        int in_group = -1;
-		
-		        String query = "SELECT * FROM user_groups WHERE user_id = ? AND group_id = ?";
-		
-		        try(PreparedStatement statementSelect = connection.prepareStatement(query)){
-		            statementSelect.setInt(1, user_id);
-		            statementSelect.setInt(2, group_id);
-		
-		            try(ResultSet resultSet = statementSelect.executeQuery()){
-		                if(resultSet.next()) {
-		                    in_group = resultSet.getInt("role_id");
-		                }
-		            }
-		        } catch(SQLException e) {
-		            System.out.println("Error verifying user group: " + e.getMessage());
-		        }
-		
-		        return in_group;
-		    }
-
-
 	
 }

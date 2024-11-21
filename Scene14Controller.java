@@ -55,6 +55,15 @@ public class Scene14Controller {
     private void handleCreateGroup(ActionEvent event) {
         switchScene(event, "scene14CreateGroup.fxml");
     }
+    @FXML
+    private void handleFindArticles(ActionEvent event) {
+        switchScene(event, "scene14SearchArticle1.fxml");
+    }
+
+    @FXML
+    private void handleViewArticle(ActionEvent event) {
+        switchScene(event, "scene14ViewArticle1.fxml");
+    }
 
     private void switchScene(ActionEvent event, String fxmlFile) {
         try {

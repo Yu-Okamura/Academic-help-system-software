@@ -59,6 +59,15 @@ public class Scene14UpdateArticle {
     private void handleCreateGroup(ActionEvent event) {
         switchScene(event, "scene14CreateGroup.fxml");
     }
+    @FXML
+    private void handleFindArticles(ActionEvent event) {
+        switchScene(event, "scene14SearchArticle1.fxml");
+    }
+
+    @FXML
+    private void handleViewArticle(ActionEvent event) {
+        switchScene(event, "scene14ViewArticle1.fxml");
+    }
     
     @FXML
     private TextField articleIDField;

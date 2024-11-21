@@ -7,30 +7,29 @@ import javafx.scene.Parent;
 import javafx.fxml.FXMLLoader;
 
 public class Main extends Application {
-    private static Stage primaryStage; // Primary window for the application
+    private static Stage primaryStage;
 
     @Override
     public void start(Stage stage) {
-        primaryStage = stage; // Set the primary stage
-        primaryStage.setTitle("Login and Sign Up System"); // Set window title
-        loadScene("scene14.fxml"); // Load the initial scene
+        primaryStage = stage;
+        primaryStage.setTitle("Login and Sign Up System");
+        loadScene("scene14.fxml"); // Load Scene 1 initially
     }
 
-    // Method to load a new scene using an FXML file
     public static void loadScene(String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(Main.class.getResource(fxmlFile));
-            Parent root = loader.load(); // Load FXML layout
-            Scene scene = new Scene(root, 600, 400); // Set scene size
-            primaryStage.setScene(scene); // Display the scene on the primary stage
-            primaryStage.show(); // Show the primary stage
+            Parent root = loader.load();
+            Scene scene = new Scene(root, 600, 400);
+            primaryStage.setScene(scene);
+            primaryStage.show();
         } catch (Exception e) {
-            e.printStackTrace(); // Print error if loading fails
+            e.printStackTrace();
         }
     }
 
     public static void main(String[] args) {
-        launch(args); // Launch the application
+        launch(args);
         
         //Fresh db run ONLY
 //        Manager admin = new Manager();

@@ -60,6 +60,15 @@ public class Scene14DeleteArticle {
     private void handleCreateGroup(ActionEvent event) {
         switchScene(event, "scene14CreateGroup.fxml");
     }
+    @FXML
+    private void handleFindArticles(ActionEvent event) {
+        switchScene(event, "scene14SearchArticle1.fxml");
+    }
+
+    @FXML
+    private void handleViewArticle(ActionEvent event) {
+        switchScene(event, "scene14ViewArticle1.fxml");
+    }
 
     @FXML
     private TextField articleIDsField;
@@ -94,7 +103,7 @@ public class Scene14DeleteArticle {
         for (String id : articleIDs.split(",")) {
             String articleID = id.trim(); // Trim to remove any extra spaces
             try {
-				admin.delete_article(Integer.parseInt(articleID));
+				//admin.delete_article(Integer.parseInt(articleID));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

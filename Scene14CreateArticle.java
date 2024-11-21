@@ -62,6 +62,15 @@ public class Scene14CreateArticle {
     private void handleCreateGroup(ActionEvent event) {
         switchScene(event, "scene14CreateGroup.fxml");
     }
+    @FXML
+    private void handleFindArticles(ActionEvent event) {
+        switchScene(event, "scene14SearchArticle1.fxml");
+    }
+
+    @FXML
+    private void handleViewArticle(ActionEvent event) {
+        switchScene(event, "scene14ViewArticle1.fxml");
+    }
 
     @FXML
     private ChoiceBox<String> levelChoiceBox;
@@ -152,7 +161,7 @@ public class Scene14CreateArticle {
         Manager admin = new Manager();
         admin.connect();
         try {
-			admin.create_article(title, description, body, updatedGroupIDs, "REFERENCES", keywords, levelGroupId);
+			admin.create_article(2, title, description, body, updatedGroupIDs, "REFERENCES", keywords, levelGroupId);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

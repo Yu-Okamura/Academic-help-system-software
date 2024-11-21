@@ -10,7 +10,7 @@ import javafx.scene.Node;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-
+import java.util.ArrayList;
 import java.io.IOException;
 
 public class Scene14SearchArticle2 {
@@ -62,27 +62,57 @@ public class Scene14SearchArticle2 {
 
     @FXML
     private AnchorPane mainAnchorPane;
+    
+//    private ArrayList<String[]> beginnerArticles = new ArrayList<>();
+//    private ArrayList<String[]> intermediateArticles = new ArrayList<>();
+//    private ArrayList<String[]> advancedArticles = new ArrayList<>();
+//    private ArrayList<String[]> expertArticles = new ArrayList<>();
+    private ArrayList<String[]> articles = new ArrayList<>();
+    
+    public int levelToPull;
 
     public void initialize() {
         // Set initial text for the summary section
+    	Manager admin = new Manager();
+    	admin.connect();
+    	System.out.println("get articles");
+    	articles = admin.filterArticlesByGroup(levelToPull);
+    	System.out.println(articles.size());
+    	
         updateSummary(getBeginnerCount(), getIntermediateCount(), getAdvancedCount(), getExpertCount());
         populateArticles();
     }
 
     private int getBeginnerCount() {
-        return 5; // Example data
+    	if (levelToPull == 1) {
+    		return articles.size();
+    	} else {
+    		return 0;
+    	}
     }
 
     private int getIntermediateCount() {
-        return 0; // Example data
+    	if (levelToPull == 2) {
+    		return articles.size();
+    	} else {
+    		return 0;
+    	}
     }
 
     private int getAdvancedCount() {
-        return 0; // Example data
+    	if (levelToPull == 3) {
+    		return articles.size();
+    	} else {
+    		return 0;
+    	}
     }
 
     private int getExpertCount() {
-        return 3; // Example data
+    	if (levelToPull == 4) {
+    		return articles.size();
+    	} else {
+    		return 0;
+    	}
     }
 
     public void updateSummary(int beginnerCount, int intermediateCount, int advancedCount, int expertCount) {
@@ -98,16 +128,25 @@ public class Scene14SearchArticle2 {
     private void populateArticles() {
         int totalCount = getBeginnerCount() + getIntermediateCount() + getAdvancedCount() + getExpertCount();
 
-        if (totalCount == 0) {
+        if (totalCount != 0) {
             // Remove the articlesTextArea from the scene
             //mainAnchorPane.getChildren().remove(articlesTextArea);
+        	StringBuilder articlestr = new StringBuilder();
+        	for (int i = 0; i < articles.size(); i++) {
+        		//StringBuilder thisArticleBuilder = new StringBuilder();
+        		//thisArticleBuilder.append(articles.get(i)[0]);
+        		//thisArticleBuilder.append(articles.get(i)[0]);
+        		articlestr.append(articles.get(i)[1]);
+        		articlestr.append("\n");
+        	}
+        	articlesTextArea.setText(articlestr.toString());
         } else {
             // Example articles
-            StringBuilder articles = new StringBuilder();
-            articles.append("Example Article 1\n");
-            articles.append("Example Article 2\n");
-            articles.append("Example Article 3\n");
-            articlesTextArea.setText(articles.toString());
+            StringBuilder articlestr = new StringBuilder();
+            articlestr.append("Example Article 1\n");
+            articlestr.append("Example Article 2\n");
+            articlestr.append("Example Article 3\n");
+            articlesTextArea.setText(articlestr.toString());
         }
     }
 
@@ -170,6 +209,7 @@ public class Scene14SearchArticle2 {
     private void handleGoBack(ActionEvent event) {
         switchScene(event, "scene14.fxml");
     }
+    
 
     private void switchScene(ActionEvent event, String fxmlFile) {
         try {

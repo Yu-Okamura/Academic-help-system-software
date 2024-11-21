@@ -36,6 +36,8 @@ public class Scene14SearchArticle1 {
 
     @FXML
     private Button submitButton;
+    
+    private int selectedLevel;
 
     @FXML
     public void initialize() {
@@ -58,29 +60,33 @@ public class Scene14SearchArticle1 {
     @FXML
     private void handleSubmit(ActionEvent event) {
         // Determine selected levels
-        StringBuilder levelIds = new StringBuilder();
-        if (beginnerCheckBox.isSelected()) levelIds.append("1, ");
-        if (intermediateCheckBox.isSelected()) levelIds.append("2, ");
-        if (advancedCheckBox.isSelected()) levelIds.append("3, ");
-        if (expertCheckBox.isSelected()) levelIds.append("4, ");
-
-        // Remove the trailing comma and space, if present
-        if (levelIds.length() > 0) levelIds.setLength(levelIds.length() - 2);
-
-        // Retrieve optional group name
-        String groupName = groupNameField.getText().trim();
-        String groupNameOutput = groupName.isEmpty() ? "" : "Group name: " + groupName;
-
-        // Retrieve optional keywords or phrases
-        String keywords = keywordsField.getText().trim();
-        String keywordsOutput = keywords.isEmpty() ? "" : "Keywords: " + keywords;
-
-        // Print the output
-        System.out.println("Level IDs: " + levelIds);
-        if (!groupNameOutput.isEmpty()) System.out.println(groupNameOutput);
-        if (groupNameOutput.isEmpty()) System.out.println("Group not specified.");
-        if (!keywordsOutput.isEmpty()) System.out.println(keywordsOutput);
-        if (keywordsOutput.isEmpty()) System.out.println("No keywords or phrases specified.");
+//        StringBuilder levelIds = new StringBuilder();
+//        if (beginnerCheckBox.isSelected()) levelIds.append("1, ");
+//        if (intermediateCheckBox.isSelected()) levelIds.append("2, ");
+//        if (advancedCheckBox.isSelected()) levelIds.append("3, ");
+//        if (expertCheckBox.isSelected()) levelIds.append("4, ");
+//
+//        // Remove the trailing comma and space, if present
+//        if (levelIds.length() > 0) levelIds.setLength(levelIds.length() - 2);
+//
+//        // Retrieve optional group name
+//        String groupName = groupNameField.getText().trim();
+//        String groupNameOutput = groupName.isEmpty() ? "" : "Group name: " + groupName;
+//
+//        // Retrieve optional keywords or phrases
+//        String keywords = keywordsField.getText().trim();
+//        String keywordsOutput = keywords.isEmpty() ? "" : "Keywords: " + keywords;
+//
+//        // Print the output
+//        System.out.println("Level IDs: " + levelIds);
+//        if (!groupNameOutput.isEmpty()) System.out.println(groupNameOutput);
+//        if (groupNameOutput.isEmpty()) System.out.println("Group not specified.");
+//        if (!keywordsOutput.isEmpty()) System.out.println(keywordsOutput);
+//        if (keywordsOutput.isEmpty()) System.out.println("No keywords or phrases specified.");]
+      if (beginnerCheckBox.isSelected()) selectedLevel = 1;
+      if (intermediateCheckBox.isSelected()) selectedLevel = 2;
+      if (advancedCheckBox.isSelected()) selectedLevel = 3;
+      if (expertCheckBox.isSelected()) selectedLevel = 4;
 
         // Switch to the next scene
         switchScene(event, "scene14SearchArticle2.fxml");
@@ -89,10 +95,14 @@ public class Scene14SearchArticle1 {
     private void switchScene(ActionEvent event, String fxmlFile) {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
-            Parent root = loader.load();
-
+            //Parent root = loader.load();
+            Scene14SearchArticle2 ctrlr = new Scene14SearchArticle2();
+            ctrlr.levelToPull = selectedLevel;
+            loader.setController(ctrlr);
             // Get the current stage
+            Parent root = loader.load();
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
+            //stage.setUserData(selectedLevel);
             stage.setScene(new Scene(root, 600, 400)); // Adjust size as necessary
             stage.show();
         } catch (IOException e) {

@@ -15,29 +15,32 @@ import java.io.IOException;
 
 public class Scene13Controller {
 
-    // FXML elements
-    @FXML private ChoiceBox<Integer> generateInviteChoiceBox, editRoleChoiceBox;
-    @FXML private Hyperlink generateLink, resetLink, setRoleLink, deleteLink, listLink, signOutLink;
-    @FXML private Text inviteCodeText, otpText;
-    @FXML private TextField resetEmailField, editRoleEmailField, deleteEmailField, confirmDeleteField, unixTimeField;
+    @FXML
+    private ChoiceBox<Integer> generateInviteChoiceBox, editRoleChoiceBox;
+    @FXML
+    private Hyperlink generateLink, resetLink, setRoleLink, deleteLink, listLink, signOutLink;
+    @FXML
+    private Text inviteCodeText, otpText;
+    @FXML
+    private TextField resetEmailField, editRoleEmailField, deleteEmailField, confirmDeleteField, unixTimeField;
 
-    private Manager admin = new Manager(); // Manager instance for admin actions
+    private Manager admin = new Manager();
 
     @FXML
     public void initialize() {
-        // Initialize choice boxes with possible role IDs
+        // Initialize choice boxes with role IDs
         generateInviteChoiceBox.getItems().addAll(1, 2, 3, 4, 5, 6, 7);
         editRoleChoiceBox.getItems().addAll(1, 2, 3, 4, 5, 6, 7);
 
-        // Disable links initially until valid input is provided
+        // Disable links initially
         generateLink.setDisable(true);
         resetLink.setDisable(true);
         setRoleLink.setDisable(true);
         deleteLink.setDisable(true);
         
-        admin.connect(); // Establish connection to the database through the Manager
+        admin.connect();
 
-        // Set listeners to enable or disable links based on field values
+        // Set listeners
         generateInviteChoiceBox.valueProperty().addListener((obs, oldVal, newVal) -> generateLink.setDisable(newVal == null));
         resetEmailField.textProperty().addListener((obs, oldVal, newVal) -> validateResetFields());
         unixTimeField.textProperty().addListener((obs, oldVal, newVal) -> validateResetFields());
@@ -45,85 +48,78 @@ public class Scene13Controller {
         editRoleEmailField.textProperty().addListener((obs, oldVal, newVal) -> validateSetRole());
         deleteEmailField.textProperty().addListener((obs, oldVal, newVal) -> deleteLink.setDisable(newVal.trim().isEmpty()));
         confirmDeleteField.textProperty().addListener((obs, oldVal, newVal) -> {
-            // Confirm deletion if user types "Yes"
             if ("Yes".equals(newVal.trim())) {
                 System.out.println("User deleted");
             }
         });
     }
 
-    // Handle generating an invite code based on selected role ID
     @FXML
     private void handleGenerateInvite(ActionEvent event) {
+         //example
         int selectedRoleId = generateInviteChoiceBox.getValue();
-        String inviteCode = this.admin.getInviteCode(selectedRoleId); // Generate invite code
-        inviteCodeText.setText(inviteCode); // Display the generated code
+        String inviteCode = this.admin.getInviteCode(selectedRoleId);
+        inviteCodeText.setText(inviteCode);
+        
     }
 
-    // Handle resetting the password and displaying OTP
     @FXML
     private void handleResetPassword(ActionEvent event) {
-        String password = admin.generateOTP(unixTimeField.getText()); // Generate OTP
-        User userToChange = new User(resetEmailField.getText(), "", "", ""); // Create user with provided email
-        admin.setPassword(userToChange, password); // Set new password
-        otpText.setText(password); // Display the OTP
+    	String password = admin.generateOTP(unixTimeField.getText());
+    	User userToChange = new User(resetEmailField.getText(), "", "", "");
+    	admin.setPassword(userToChange, password);
+        otpText.setText(password); //example
     }
 
-    // Handle setting a role for a specific user
     @FXML
     private void handleSetRole(ActionEvent event) {
         System.out.println("User role updated"); 
-        User userToChange = new User(editRoleEmailField.getText(), "", "", ""); // Create user with email
-        int idToChange = admin.getUserID(userToChange); // Get user ID by email
-        admin.changeRole(idToChange, editRoleChoiceBox.getValue()); // Update role based on selection
+        User userToChange = new User(editRoleEmailField.getText(), "", "", "");
+        int idToChange = admin.getUserID(userToChange);
+        admin.changeRole(idToChange, editRoleChoiceBox.getValue());
     }
 
-    // Handle user deletion
     @FXML
     private void handleDeleteUser(ActionEvent event) {
-        confirmDeleteField.setVisible(true); // Show confirmation field
-        User userToChange = new User(deleteEmailField.getText(), "", "", ""); // Create user with email
-        admin.deleteUserByID(userToChange); // Delete user by ID
+        confirmDeleteField.setVisible(true);
+        User userToChange = new User(deleteEmailField.getText(), "", "", "");
+        admin.deleteUserByID(userToChange);
     }
 
-    // Handle listing all users (stubbed for example)
     @FXML
     private void handleListUsers(ActionEvent event) {
-        System.out.println("Listed all users"); // Placeholder action
+        System.out.println("Listed all users");
     }
 
-    // Handle signing out and switching scenes
     @FXML
     private void handleSignOut(ActionEvent event) {
-        switchScene(event, "scene1.fxml"); // Switch to login scene
+        switchScene(event, "scene1.fxml");
     }
 
-    // Validate fields for resetting password
     private void validateResetFields() {
         boolean isEmailFilled = !resetEmailField.getText().trim().isEmpty();
         boolean isUnixTimeFilled = !unixTimeField.getText().trim().isEmpty();
-        resetLink.setDisable(!(isEmailFilled && isUnixTimeFilled)); // Enable reset link if fields are filled
+        resetLink.setDisable(!(isEmailFilled && isUnixTimeFilled));
     }
 
-    // Validate fields for setting user role
     private void validateSetRole() {
         boolean isEmailFilled = !editRoleEmailField.getText().trim().isEmpty();
         boolean isRoleSelected = editRoleChoiceBox.getValue() != null;
-        setRoleLink.setDisable(!(isEmailFilled && isRoleSelected)); // Enable role link if fields are valid
+        setRoleLink.setDisable(!(isEmailFilled && isRoleSelected));
     }
 
-    // Switch to a new scene specified by fxmlFile
     private void switchScene(ActionEvent event, String fxmlFile) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile)); // Load new scene
+            // Load the FXML for the new scene
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(fxmlFile));
             Parent root = loader.load();
 
-            // Get current stage and set new scene
+            // Get the current stage (window) and set the new scene
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
-            stage.setScene(new Scene(root, 600, 400)); // Set scene dimensions
+            stage.setScene(new Scene(root, 600, 400));
             stage.show();
         } catch (IOException e) {
-            e.printStackTrace(); // Handle any loading errors
+            e.printStackTrace();
         }
     }
 }
