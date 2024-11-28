@@ -1144,5 +1144,73 @@ public class Manager {
 	public String getInviteCode(int index) {
 	    return this.inviteCodes[index]; // Return invite code at specified index
 	}
+	 public String[] encryptArticleTable(String title, String discription, String body, String group_ids, String ref, String keywords, String level) throws Exception {
+			//encrypting
+					String etitle = EncryptionHelper.encrypt(title);	
+					String ediscription = EncryptionHelper.encrypt(discription);	
+					String ebody =EncryptionHelper.encrypt(body);	
+					String egroup_ids = EncryptionHelper.encrypt(group_ids);	
+					String eref = EncryptionHelper.encrypt(ref);	
+					String ekeywords = EncryptionHelper.encrypt(keywords);	
+					String elevel = EncryptionHelper.encrypt(level);	
+					
+				
+				String insertArticle = "INSERT INTO articles (Title ,Discription , Body , Group_ids , Reference_Articles , Keywords , Level , IV ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+				try /*(PreparedStatement pstmt = connection.prepareStatement(insertArticle)) */{
+					/*pstmt.setString(1, etitle);
+					pstmt.setString(2, ediscription);
+					pstmt.setString(3, ebody);
+					pstmt.setString(4, egroup_ids);
+					pstmt.setString(5, eref);
+					pstmt.setString(6, ekeywords);
+					pstmt.setString(7, elevel);
+					pstmt.executeUpdate();*/
+					System.out.println("Article created successfully" );
+					
+					System.out.println("Titile:"+etitle );
+					System.out.println("Discription:"+ediscription );
+					System.out.println("Body:"+ebody );
+					System.out.println("Group_ids:"+egroup_ids );
+					System.out.println("References:" );
+					System.out.println("Keywords:" +ekeywords);
+					System.out.println("Level:"+elevel );
+					
+					return new String[] {etitle,ediscription,ebody,egroup_ids,eref,ekeywords,elevel};
+					
+					
+				}catch(Exception e) {
+					System.out.println("Error Restoring" +e.getMessage());
+					return null;
+				}
+			}
+
+   
+	
+    public void decryptArticleTable(String title, String discription, String body, String group_ids, String ref, String keywords, String level) throws Exception {
+		//encrypting
+				String dtitle = EncryptionHelper.decrypt(title);	
+				String ddiscription = EncryptionHelper.decrypt(discription);	
+				String dbody =EncryptionHelper.decrypt(body);	
+				String dgroup_ids = EncryptionHelper.decrypt(group_ids);	
+				String dref = EncryptionHelper.decrypt(ref);	
+				String dkeywords = EncryptionHelper.decrypt(keywords);	
+				String dlevel = EncryptionHelper.decrypt(level);	
+				
+				System.out.println("Article created successfully" );
+				
+				System.out.println("Titile:"+dtitle );
+				System.out.println("Discription:"+ddiscription );
+				System.out.println("Body:"+dbody );
+				System.out.println("Group_ids:"+dgroup_ids );
+				System.out.println("References:" );
+				System.out.println("Keywords:" +dkeywords);
+				System.out.println("Level:"+dlevel );
+	
+				
+				
+				
+			
+		}
+	
 	
 }
