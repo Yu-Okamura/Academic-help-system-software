@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Scene10SearchArticle2">
+   <right>
+      <AnchorPane prefHeight="360.0" prefWidth="277.0" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
+         <children>
+            <Text fill="#00ffc9" layoutX="80.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome back!">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Hyperlink fx:id="signOutLink1" layoutX="229.0" layoutY="1.0" onAction="#handleSignOut" style="-fx-background-color: transparent;" text="Sign out" textFill="#00ffc9">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Hyperlink>
+            <Hyperlink fx:id="genericMessageLink" layoutX="71.0" layoutY="95.0" onAction="#handleSendGenericMessage" style="-fx-background-color: transparent;" text="Send a generic message" textFill="#00ffc9" />
+            <Hyperlink fx:id="specificMessageLink" layoutX="73.0" layoutY="120.0" onAction="#handleSendSpecificMessage" style="-fx-background-color: transparent;" text="Send a specific message" textFill="#00ffc9" />
+            <Hyperlink fx:id="findArticlesLink" layoutX="102.0" layoutY="145.0" onAction="#handleFindArticles" style="-fx-background-color: transparent;" text="Find article(s)" textFill="#00ffc9" />
+            <Hyperlink fx:id="viewArticleLink" layoutX="99.0" layoutY="170.0" onAction="#handleViewArticle" style="-fx-background-color: transparent;" text="View an article" textFill="#00ffc9" />
+         </children>
+      </AnchorPane>
+   </right>
+   <center>
+      <ScrollPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: black;" BorderPane.alignment="CENTER">
+         <content>
+            <AnchorPane fx:id="mainAnchorPane" prefHeight="548.0" prefWidth="323.0" style="-fx-background-color: black;">
+               <children>
+                  <Hyperlink fx:id="searchResultLink" alignment="CENTER" layoutX="67.0" layoutY="31.0" prefHeight="35.0" prefWidth="176.0" style="-fx-background-color: transparent;" text="Search result" textFill="#00ffc9">
+                     <font>
+                        <Font size="18.0" />
+                     </font>
+                  </Hyperlink>
+                  <TextArea fx:id="summaryTextArea" editable="false" layoutX="-12.0" layoutY="75.0" prefHeight="77.0" prefWidth="334.0" style="-fx-control-inner-background: black; -fx-background-color: transparent;" text="Specified group: &lt;name or &quot;not specified&quot;&gt;&#10;&#10;&lt;#&gt; beginner, &lt;#&gt; intermediate,&#10;&lt;#&gt; advanced, &lt;#&gt; expert articles found." wrapText="true" />
+                  <TextArea fx:id="articlesTextArea" editable="false" layoutX="27.0" layoutY="169.0" prefHeight="353.0" prefWidth="259.0" style="-fx-control-inner-background: black;" text="" wrapText="true" />
+                  <Hyperlink fx:id="goBackLinkTop" layoutX="257.0" layoutY="1.0" onAction="#handleGoBack" style="-fx-background-color: transparent;" text="Go back" textFill="#00ffc9">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Hyperlink>
+                  <Hyperlink fx:id="goBackLinkBottom" layoutX="257.0" layoutY="522.0" onAction="#handleGoBack" style="-fx-background-color: transparent;" text="Go back" textFill="#00ffc9">
+                     <font>
+                        <Font size="10.0" />
+                     </font>
+                  </Hyperlink>
+               </children>
+            </AnchorPane>
+         </content>
+      </ScrollPane>
+   </center>
+</BorderPane>
