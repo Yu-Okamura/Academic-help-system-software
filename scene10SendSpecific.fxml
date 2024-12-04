@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.text.Font?>
+<?import javafx.scene.text.Text?>
+
+<BorderPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/23" xmlns:fx="http://javafx.com/fxml/1" fx:controller="application.Scene10SendSpecific">
+   <right>
+      <AnchorPane prefHeight="360.0" prefWidth="277.0" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
+         <children>
+            <Text fill="#00ffc9" layoutX="80.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome back!">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Text>
+            <Hyperlink fx:id="signOutLink" layoutX="229.0" layoutY="1.0" onAction="#handleSignOut" style="-fx-background-color: transparent;" text="Sign out" textFill="#00ffc9">
+               <font>
+                  <Font size="10.0" />
+               </font>
+            </Hyperlink>
+            <Hyperlink fx:id="genericMessageLink" layoutX="71.0" layoutY="95.0" onAction="#handleSendGenericMessage" style="-fx-background-color: transparent;" text="Send a generic message" textFill="#00ffc9" />
+            <Hyperlink fx:id="specificMessageLink" layoutX="73.0" layoutY="120.0" onAction="#handleSendSpecificMessage" style="-fx-background-color: transparent;" text="Send a specific message" textFill="#00ffc9" />
+            <Hyperlink fx:id="findArticlesLink" layoutX="102.0" layoutY="145.0" onAction="#handleFindArticles" style="-fx-background-color: transparent;" text="Find article(s)" textFill="#00ffc9" />
+            <Hyperlink fx:id="viewArticleLink" layoutX="99.0" layoutY="170.0" onAction="#handleViewArticle" style="-fx-background-color: transparent;" text="View an article" textFill="#00ffc9" />
+         </children>
+      </AnchorPane>
+   </right>
+   <center>
+      <AnchorPane prefHeight="360.0" prefWidth="316.0" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
+         <children>
+            <Hyperlink alignment="CENTER" layoutX="46.0" layoutY="32.0" prefHeight="35.0" prefWidth="232.0" style="-fx-background-color: transparent;" text="Send specific message" textFill="#00ffc9">
+               <font>
+                  <Font size="18.0" />
+               </font>
+            </Hyperlink>
+            <Text fill="WHITE" layoutX="37.0" layoutY="96.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Enter topic name" wrappingWidth="156.0" />
+            <TextField fx:id="topicField" layoutX="37.0" layoutY="100.0" prefHeight="25.0" prefWidth="250.0" />
+            <Text fill="WHITE" layoutX="37.0" layoutY="145.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Provide specific description" wrappingWidth="179.0" />
+            <TextArea fx:id="specificMessageField" layoutX="37.0" layoutY="149.0" prefHeight="60.0" prefWidth="249.0" wrapText="true" />
+            <Button fx:id="submitButton" disable="true" layoutX="87.0" layoutY="230.0" mnemonicParsing="false" onAction="#handleSubmit" prefHeight="27.0" prefWidth="151.0" style="-fx-background-color: #00ffc9;" text="Submit" />
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

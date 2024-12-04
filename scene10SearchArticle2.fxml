@@ -41,16 +41,6 @@
                   </Hyperlink>
                   <TextArea fx:id="summaryTextArea" editable="false" layoutX="-12.0" layoutY="75.0" prefHeight="77.0" prefWidth="334.0" style="-fx-control-inner-background: black; -fx-background-color: transparent;" text="Specified group: &lt;name or &quot;not specified&quot;&gt;&#10;&#10;&lt;#&gt; beginner, &lt;#&gt; intermediate,&#10;&lt;#&gt; advanced, &lt;#&gt; expert articles found." wrapText="true" />
                   <TextArea fx:id="articlesTextArea" editable="false" layoutX="27.0" layoutY="169.0" prefHeight="353.0" prefWidth="259.0" style="-fx-control-inner-background: black;" text="" wrapText="true" />
-                  <Hyperlink fx:id="goBackLinkTop" layoutX="257.0" layoutY="1.0" onAction="#handleGoBack" style="-fx-background-color: transparent;" text="Go back" textFill="#00ffc9">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Hyperlink>
-                  <Hyperlink fx:id="goBackLinkBottom" layoutX="257.0" layoutY="522.0" onAction="#handleGoBack" style="-fx-background-color: transparent;" text="Go back" textFill="#00ffc9">
-                     <font>
-                        <Font size="10.0" />
-                     </font>
-                  </Hyperlink>
                </children>
             </AnchorPane>
          </content>
