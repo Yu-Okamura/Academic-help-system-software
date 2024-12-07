@@ -41,13 +41,13 @@ import org.json.JSONArray;
 import application.User;
 
 public class Manager {
-	
+    //establishing the sql connection 	
     static String url = "jdbc:mysql://localhost:3306/CSE360";
     static String root_user = "root";
     static String root_password = "Password321!";
     
     private Connection connection = null;
-    
+    //Predefining the invite code
     private String[] inviteCodes = {"CODE001", "CODE002", "CODE003", "CODE004", "CODE005", "CODE007", "CODE008", "CODE009", "CODE010"};
     private int[] inviteCodeRoles = {1, 2, 3, 4, 5, 6, 7, 1, 2, 3};
     
@@ -58,7 +58,7 @@ public class Manager {
     	this.root_password = root_password;
     	this.connection = connection;
     }
-	
+	//dening the connect funtion to check sql connection
 	public void connect() {
 		Connection connection = null;
 		
@@ -122,6 +122,7 @@ public class Manager {
 //			e.printStackTrace();
 //		}
 //	}
+	//defining the create database and table function 
 	public void createDatabaseAndTables() {
     	String database =  "create database CSE360;";
     	String use = " use CSE360;";
