@@ -98,6 +98,7 @@ public class Scene14SearchArticle1 {
             //Parent root = loader.load();
             Scene14SearchArticle2 ctrlr = new Scene14SearchArticle2();
             ctrlr.levelToPull = selectedLevel;
+            ctrlr.searchKeywords = keywordsField.getText().trim();
             loader.setController(ctrlr);
             // Get the current stage
             Parent root = loader.load();

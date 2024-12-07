@@ -1,6 +1,8 @@
 package application;
 
+import java.security.SecureRandom;
 import java.security.Security;
+import java.util.Base64;
 
 import javax.crypto.Cipher;
 import javax.crypto.SecretKey;

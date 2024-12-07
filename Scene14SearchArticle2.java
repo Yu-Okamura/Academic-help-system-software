@@ -70,6 +70,8 @@ public class Scene14SearchArticle2 {
     private ArrayList<String[]> articles = new ArrayList<>();
     
     public int levelToPull;
+    
+    public String searchKeywords;
 
     public void initialize() {
         // Set initial text for the summary section
@@ -77,6 +79,15 @@ public class Scene14SearchArticle2 {
     	admin.connect();
     	System.out.println("get articles");
     	articles = admin.filterArticlesByGroup(levelToPull);
+    	
+    	String[][] searchResults = admin.searchArticles(this.searchKeywords);
+        
+        // Convert array to ArrayList for consistency
+        for (String[] article : searchResults) {
+            articles.add(article);
+        }
+    	
+    	
     	System.out.println(articles.size());
     	
         updateSummary(getBeginnerCount(), getIntermediateCount(), getAdvancedCount(), getExpertCount());
@@ -143,9 +154,7 @@ public class Scene14SearchArticle2 {
         } else {
             // Example articles
             StringBuilder articlestr = new StringBuilder();
-            articlestr.append("Example Article 1\n");
-            articlestr.append("Example Article 2\n");
-            articlestr.append("Example Article 3\n");
+            articlestr.append("None Found\n");
             articlesTextArea.setText(articlestr.toString());
         }
     }

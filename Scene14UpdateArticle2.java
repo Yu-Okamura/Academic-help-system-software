@@ -191,7 +191,7 @@ public class Scene14UpdateArticle2 {
         Manager admin = new Manager();
         admin.connect();
         try {
-			admin.update_article(this.passedID, title, description, body, updatedGroupIDs, "REFERENCE", keywords, levelGroupId);
+			admin.update_article(this.passedID, title, description, body, updatedGroupIDs, links, keywords, levelGroupId);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

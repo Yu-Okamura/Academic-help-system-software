@@ -10,13 +10,13 @@
    <right>
       <AnchorPane prefHeight="360.0" prefWidth="277.0" style="-fx-background-color: #000000;" BorderPane.alignment="CENTER">
          <children>
-            <Hyperlink fx:id="signOutLink" layoutX="112.0" layoutY="307.0" style="-fx-background-color: transparent;" text="Sign out" textFill="#00ffc9" onAction="#handleSignOut" />
+            <Hyperlink fx:id="signOutLink" layoutX="112.0" layoutY="307.0" style="-fx-background-color: transparent;" text="Proceed" textFill="#00ffc9" onAction="#handleSignOut" />
             <Text fill="#00ffc9" layoutX="80.0" layoutY="59.0" strokeType="OUTSIDE" strokeWidth="0.0" text="Welcome back!">
                <font>
                   <Font size="18.0" />
                </font>
             </Text>
-            <Text fill="WHITE" layoutX="39.0" layoutY="104.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You are now logged in so go ahead and sign out! :)" wrappingWidth="200.0" />
+            <Text fill="WHITE" layoutX="39.0" layoutY="104.0" strokeType="OUTSIDE" strokeWidth="0.0" text="You are now logged in! :)" wrappingWidth="200.0" />
          </children>
       </AnchorPane>
    </right>

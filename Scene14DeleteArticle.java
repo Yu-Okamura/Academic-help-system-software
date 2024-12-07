@@ -103,7 +103,7 @@ public class Scene14DeleteArticle {
         for (String id : articleIDs.split(",")) {
             String articleID = id.trim(); // Trim to remove any extra spaces
             try {
-				//admin.delete_article(Integer.parseInt(articleID));
+				admin.delete_article(0, Integer.parseInt(articleID));
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();

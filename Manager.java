@@ -33,8 +33,8 @@ import application.User;
 
 import java.util.Base64;
 
-import application.EncryptionHelper;
-import application.EncryptionUtils;
+//import application.EncryptionHelper;
+//import application.EncryptionUtils;
 
 import org.json.JSONArray;
 
@@ -802,98 +802,110 @@ public class Manager {
 	public void backup(String path, int groupId) throws SQLException {
 	    String query = "SELECT * FROM articles";
 	    if (groupId != 0) {
-	        query += " WHERE JSON_CONTAINS(Group_ids, JSON_QUOTE(?))"; // Filter by group ID if specified
+	        query += " WHERE JSON_CONTAINS(Group_ids, JSON_QUOTE(?))";
 	    }
+	    
 	    try (PreparedStatement pstmt = connection.prepareStatement(query);
 	         BufferedWriter writer = new BufferedWriter(new FileWriter(path))) {
 	        if (groupId != 0) {
-	            pstmt.setString(1, String.valueOf(groupId)); // Set group ID parameter
+	            pstmt.setString(1, String.valueOf(groupId));
 	        }
+	        
 	        try (ResultSet rs = pstmt.executeQuery()) {
 	            while (rs.next()) {
-	                // Retrieve and write each article's attributes to the file
-	                writer.write("ID: " + rs.getInt("ID"));
-	                writer.newLine();
-	                writer.write("Title: " + rs.getString("Title"));
-	                writer.newLine();
-	                writer.write("Description: " + rs.getString("Discription"));
-	                writer.newLine();
-	                writer.write("Body: " + rs.getString("Body"));
-	                writer.newLine();
-	                writer.write("Group IDs: " + rs.getString("Group_ids"));
-	                writer.newLine();
-	                writer.write("Reference Articles: " + rs.getString("Reference_Articles"));
-	                writer.newLine();
-	                writer.write("Keywords: " + rs.getString("Keywords"));
-	                writer.newLine();
-	                writer.write("Level: " + rs.getString("Level"));
-	                writer.newLine();
-	                writer.write("-----------------------");
-	                writer.newLine();
+	                StringBuilder articleData = new StringBuilder();
+	                articleData.append("ID: ").append(rs.getInt("ID")).append("\n");
+	                articleData.append("Title: ").append(rs.getString("Title")).append("\n");
+	                articleData.append("Description: ").append(rs.getString("Discription")).append("\n");
+	                articleData.append("Body: ").append(rs.getString("Body")).append("\n");
+	                articleData.append("Group IDs: ").append(rs.getString("Group_ids")).append("\n");
+	                articleData.append("Reference Articles: ").append(rs.getString("Reference_Articles")).append("\n");
+	                articleData.append("Keywords: ").append(rs.getString("Keywords")).append("\n");
+	                articleData.append("Level: ").append(rs.getString("Level")).append("\n");
+	                articleData.append("-----------------------\n");
+
+	                try {
+	                    String encryptedData = EncryptionHelper.encrypt(articleData.toString());
+	                    writer.write(encryptedData);
+	                    writer.newLine();
+	                } catch (Exception e) {
+	                    System.out.println("ERROR: " + e.getMessage());
+	                }
 	            }
 	        }
-	        System.out.println("Backup complete!");
+	        System.out.println("Backup finished");
 	    } catch (IOException e) {
-	        System.out.println("Error during backup: " + e.getMessage());
+	        System.out.println("ERROR: " + e.getMessage());
 	    }
 	}
-	
+
 	public void restore(String path, boolean overwrite) throws SQLException {
 	    if (overwrite) {
 	        try (Statement stmt = connection.createStatement()) {
-	            stmt.executeUpdate("DELETE FROM articles"); // Clear existing articles if overwrite is true
+	            stmt.executeUpdate("DELETE FROM articles");
 	        } catch (SQLException e) {
 	            System.out.println("Error clearing articles: " + e.getMessage());
 	            return;
 	        }
 	    }
-	
-	    // Read from the backup file and insert each article back into the database
+
 	    try (BufferedReader reader = new BufferedReader(new FileReader(path))) {
-	        String line;
-	        int id = 0;
-	        String title = null, discription = null, body = null, group_ids = null, referenceArticles = null, keywords = null, level = null;
-	
-	        while ((line = reader.readLine()) != null) {
-	            if (line.startsWith("ID: ")) {
-	                id = Integer.parseInt(line.split(": ")[1]);
-	            } else if (line.startsWith("Title: ")) {
-	                title = line.split(": ")[1];
-	            } else if (line.startsWith("Description: ")) {
-	                discription = line.split(": ")[1];
-	            } else if (line.startsWith("Body: ")) {
-	                body = line.split(": ")[1];
-	            } else if (line.startsWith("Group IDs: ")) {
-	                group_ids = line.split(": ")[1];
-	            } else if (line.startsWith("Reference Articles: ")) {
-	                referenceArticles = line.split(": ")[1];
-	            } else if (line.startsWith("Keywords: ")) {
-	                keywords = line.split(": ")[1];
-	            } else if (line.startsWith("Level: ")) {
-	                level = line.split(": ")[1];
-	            } else if (line.startsWith("-----------------------")) {
-	                // Insert the article data once all fields are read
-	                String query = "INSERT INTO articles (ID, Title, Discription, Body, Group_ids, Reference_Articles, Keywords, Level) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-	                try (PreparedStatement pstmt = connection.prepareStatement(query)) {
-	                    pstmt.setLong(1, id);
-	                    pstmt.setString(2, title);
-	                    pstmt.setString(3, discription);
-	                    pstmt.setString(4, body);
-	                    pstmt.setString(5, group_ids);
-	                    pstmt.setString(6, referenceArticles);
-	                    pstmt.setString(7, keywords);
-	                    pstmt.setString(8, level);
-	                    pstmt.executeUpdate();
-	                } catch (SQLException e) {
-	                    System.out.println("Error inserting article: " + e.getMessage());
+	        String encryptedLine;
+	        while ((encryptedLine = reader.readLine()) != null) {
+	            try {
+	                String decryptedData = EncryptionHelper.decrypt(encryptedLine);
+	                
+	                String[] lines = decryptedData.split("\n");
+	                int id = 0;
+	                String title = null, description = null, body = null;
+	                String groupIds = null, referenceArticles = null;
+	                String keywords = null, level = null;
+
+	                for (String line : lines) {
+	                    if (line.startsWith("ID: ")) {
+	                        id = Integer.parseInt(line.substring(4).trim());
+	                    } else if (line.startsWith("Title: ")) {
+	                        title = line.substring(7);
+	                    } else if (line.startsWith("Description: ")) {
+	                        description = line.substring(13);
+	                    } else if (line.startsWith("Body: ")) {
+	                        body = line.substring(6);
+	                    } else if (line.startsWith("Group IDs: ")) {
+	                        groupIds = line.substring(11);
+	                    } else if (line.startsWith("Reference Articles: ")) {
+	                        referenceArticles = line.substring(20);
+	                    } else if (line.startsWith("Keywords: ")) {
+	                        keywords = line.substring(10);
+	                    } else if (line.startsWith("Level: ")) {
+	                        level = line.substring(7);
+	                    }
 	                }
+
+	                if (title != null && !title.isEmpty()) {
+	                    String query = "INSERT INTO articles (ID, Title, Discription, Body, Group_ids, Reference_Articles, Keywords, Level) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+	                    try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+	                        pstmt.setInt(1, id);
+	                        pstmt.setString(2, title);
+	                        pstmt.setString(3, description);
+	                        pstmt.setString(4, body);
+	                        pstmt.setString(5, groupIds);
+	                        pstmt.setString(6, referenceArticles);
+	                        pstmt.setString(7, keywords);
+	                        pstmt.setString(8, level);
+	                        pstmt.executeUpdate();
+	                    }
+	                }
+	            } catch (Exception e) {
+	                System.out.println("ERROR: " + e.getMessage());
 	            }
 	        }
-	        System.out.println("Restore completed!");
+	        System.out.println("Restore done");
 	    } catch (IOException e) {
-	        System.out.println("Error restoring from file: " + e.getMessage());
+	        System.out.println("ERROR: " + e.getMessage());
 	    }
 	}
+	
+	
 	
 	public void updateUser(int userID, User user) {
 	    String query = "UPDATE userinfo SET Username = ?, Password = ?, Name = ?, Email = ? WHERE ID = ?";
@@ -1144,73 +1156,5 @@ public class Manager {
 	public String getInviteCode(int index) {
 	    return this.inviteCodes[index]; // Return invite code at specified index
 	}
-	 public String[] encryptArticleTable(String title, String discription, String body, String group_ids, String ref, String keywords, String level) throws Exception {
-			//encrypting
-					String etitle = EncryptionHelper.encrypt(title);	
-					String ediscription = EncryptionHelper.encrypt(discription);	
-					String ebody =EncryptionHelper.encrypt(body);	
-					String egroup_ids = EncryptionHelper.encrypt(group_ids);	
-					String eref = EncryptionHelper.encrypt(ref);	
-					String ekeywords = EncryptionHelper.encrypt(keywords);	
-					String elevel = EncryptionHelper.encrypt(level);	
-					
-				
-				String insertArticle = "INSERT INTO articles (Title ,Discription , Body , Group_ids , Reference_Articles , Keywords , Level , IV ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
-				try /*(PreparedStatement pstmt = connection.prepareStatement(insertArticle)) */{
-					/*pstmt.setString(1, etitle);
-					pstmt.setString(2, ediscription);
-					pstmt.setString(3, ebody);
-					pstmt.setString(4, egroup_ids);
-					pstmt.setString(5, eref);
-					pstmt.setString(6, ekeywords);
-					pstmt.setString(7, elevel);
-					pstmt.executeUpdate();*/
-					System.out.println("Article created successfully" );
-					
-					System.out.println("Titile:"+etitle );
-					System.out.println("Discription:"+ediscription );
-					System.out.println("Body:"+ebody );
-					System.out.println("Group_ids:"+egroup_ids );
-					System.out.println("References:" );
-					System.out.println("Keywords:" +ekeywords);
-					System.out.println("Level:"+elevel );
-					
-					return new String[] {etitle,ediscription,ebody,egroup_ids,eref,ekeywords,elevel};
-					
-					
-				}catch(Exception e) {
-					System.out.println("Error Restoring" +e.getMessage());
-					return null;
-				}
-			}
-
-   
-	
-    public void decryptArticleTable(String title, String discription, String body, String group_ids, String ref, String keywords, String level) throws Exception {
-		//encrypting
-				String dtitle = EncryptionHelper.decrypt(title);	
-				String ddiscription = EncryptionHelper.decrypt(discription);	
-				String dbody =EncryptionHelper.decrypt(body);	
-				String dgroup_ids = EncryptionHelper.decrypt(group_ids);	
-				String dref = EncryptionHelper.decrypt(ref);	
-				String dkeywords = EncryptionHelper.decrypt(keywords);	
-				String dlevel = EncryptionHelper.decrypt(level);	
-				
-				System.out.println("Article created successfully" );
-				
-				System.out.println("Titile:"+dtitle );
-				System.out.println("Discription:"+ddiscription );
-				System.out.println("Body:"+dbody );
-				System.out.println("Group_ids:"+dgroup_ids );
-				System.out.println("References:" );
-				System.out.println("Keywords:" +dkeywords);
-				System.out.println("Level:"+dlevel );
-	
-				
-				
-				
-			
-		}
-	
 	
 }
