@@ -79,5 +79,5 @@ Contributors
 
 License
 
-This project is licensed. See the LICENSE file for details.
+This software is licensed and intended for personal use only. Any reuse, copying, or distribution of any part of this program without prior written consent is strictly prohibited.
 
