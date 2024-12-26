@@ -73,7 +73,6 @@ Contributors
 - Yu Okamura
 - Max Wolf
 - Ananya Arora
-- Yu Okamura
 - Ben Moriarty
 - Princess Mariah Taylor
 
